@@ -1,0 +1,118 @@
+
+R version 2.9.2 (2009-08-24)
+Copyright (C) 2009 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(intamapInteractive)
+Loading required package: intamap
+Loading required package: sp
+Loading required package: gstat
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.6.2, released 2009/07/31
+Path to GDAL shared files: c:/R/R-29~1.2/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
+Path to PROJ.4 shared files: c:/R/R-29~1.2/library/rgdal/proj
+Loading required package: akima
+Loading required package: automap
+Loading required package: mvtnorm
+Loading required package: MASS
+Loading required package: evd
+Loading required package: lattice
+
+Attaching package: 'lattice'
+
+
+	The following object(s) are masked from package:evd :
+
+	 qq 
+
+Loading required package: spcosa
+Loading required package: rJava
+Loading required package: ggplot2
+Loading required package: proto
+Loading required package: grid
+Loading required package: reshape
+Loading required package: plyr
+
+Attaching package: 'ggplot2'
+
+
+	The following object(s) are masked from package:grid :
+
+	 nullGrob 
+
+Loading required package: spatstat
+Loading required package: mgcv
+This is mgcv  1.5-5 . For overview type `help("mgcv-package")'.
+Loading required package: gpclib
+General Polygon Clipper Library for R (version 1.4-4)
+	Type 'class ? gpc.poly' for help
+
+Loading required package: deldir
+deldir 0.0-8 
+spatstat 1.16-2  (Type 'help(spatstat)' for information)
+
+Attaching package: 'spatstat'
+
+
+	The following object(s) are masked from package:ggplot2 :
+
+	 rescale 
+
+> 
+> data(walker)
+> coordinates(walker)=~X+Y
+> object=createIntamapObject(observations=walker)
+[1] "createIntamapProject: formulaString is missing, using:  Id ~1"
+Warning message:
+In createIntamapObject(observations = walker) :
+  createIntamapObject: No prediction locations submitted - sampling from bbox of observations
+> object=anisotropyChoice(object)
+> 
+> print(summary(object$clusters$index))
+       V1   
+ Min.   :1  
+ 1st Qu.:1  
+ Median :1  
+ Mean   :1  
+ 3rd Qu.:1  
+ Max.   :1  
+> print(object$anisPar)
+$ratio
+[1] 1.196326
+
+$direction
+[1] 87.29871
+
+$clusters
+     [,1]     [,2]     [,3] [,4]  [,5]
+[1,]    1 1.196326 87.29871  470 68531
+
+> 
+> 
+> 
+> object=doSegmentation(object)
+[1] "Clustering - Segmentation"
+> 
+> print(summary(object$clusters$index))
+       V1   
+ Min.   :1  
+ 1st Qu.:1  
+ Median :1  
+ Mean   :1  
+ 3rd Qu.:1  
+ Max.   :1  
+> 
