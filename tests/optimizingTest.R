@@ -77,7 +77,7 @@ optim1 = optimizeNetwork(observations,
                           action = "del",
                           nDiff = 2,
                           predGrid, candidates,
-                          plotOptim=TRUE)
+                          plotOptim=FALSE)
 # Computes the Mukv of the optimized network with spatial coverage
 MukvDel2 = calculateMukv(optim1, predGrid, model, formulaString = dayx~x+y)
 print(MukvDel2)
@@ -86,14 +86,14 @@ print(MukvDel2)
 # Deletes optimally 20 stations from current network with method "ssa"
 # (spatial simulated annealing) and criterion "mukv"
 #windows()
-if (test) {
+if (FALSE) {
 optim2 = optimizeNetwork(observations ,
                           method = "ssa",
                           criterion = "MUKV",
                           action = "del",
                           nDiff = 2,
                           predGrid, candidates, model,
-                          plotOptim=TRUE)
+                          plotOptim=FALSE)
 # Computes the Mukv of the optimized network with spatial simulated
 # annealing applied to mukv
 MukvDel3 <- calculateMukv(optim2, predGrid, model)
@@ -134,7 +134,7 @@ print(MukvAdd2)
 # Adds optimally 20 stations from current network with
 # method "ssa" (spatial simulated annealing) and
 # criterion "mukv"
-if (test) {
+if (FALSE) {
 optimAdd3=optimizeNetwork( observations ,
                            method = "ssa",
                            criterion = "MUKV",
