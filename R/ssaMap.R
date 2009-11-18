@@ -8,12 +8,32 @@
 
 ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX, minShiftFactorX, 
                   maxShiftFactorY, minShiftFactorY, start_p, countMax, 
-                  netPts, addPts, delPts, crit1, nn, action, nDiff, netPtsInit, nr_iterations, plotOptim,...) {
+                  netPts, addPts, delPts, crit1, nn, action, nDiff, netPtsInit, nr_iterations, plotOptim,
+                  formulaString = NULL, models, nmax = 200, ...) {
 
-  largest_poly <- sapply(slot(candidates, "polygons"), function(x) slot(x, "plotOrder"))[1] # largest polygon
-  studyareacoords <- coordinates(candidates@polygons[[1]]@Polygons[[largest_poly]]) 
-
+#  largest_poly <- sapply(slot(candidates, "polygons"), function(x) slot(x, "plotOrder"))[1] # largest polygon
+#  studyareacoords <- coordinates(candidates@polygons[[1]]@Polygons[[largest_poly]]) 
+  cnames = dimnames(coordinates(netPts))[[2]]
+  nvar = dim(as.data.frame(netPts))[2]-2
+  cform = as.formula(paste("~",cnames[1],"+",cnames[2]))
   count = 0
+
+
+# 
+  if (missing(candidates)) {
+    bb = bbox(netPts)
+    bb1 = bbox(predGrid)
+    bb[[1]] = min(bb[[1]],bb1[[1]])
+    bb[[2]] = min(bb[[2]],bb1[[2]])
+    bb[[3]] = max(bb[[3]],bb1[[3]])
+    bb[[4]] = max(bb[[4]],bb1[[4]])
+    boun = SpatialPoints(data.frame(x=c(bb[1,1],bb[1,2],bb[1,2],bb[1,1],bb[1,1]),
+                                y=c(bb[2,1],bb[2,1],bb[2,2],bb[2,2],bb[2,1])))
+    Srl = Polygons(list(Polygon(boun)),ID = as.character(1))
+    candidates = SpatialPolygonsDataFrame(SpatialPolygons(list(Srl)),
+                                      data = data.frame(ID=1))
+  }
+  
 # settings for simulated annealing
   x_bounds <- bbox(candidates)[1, ]
   y_bounds <- bbox(candidates)[2, ]
@@ -23,7 +43,7 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
   min_shift_x <- minShiftFactorX * x_extent  # minimum shift in x-direction
   max_shift_y <- maxShiftFactorY * y_extent  # maximum shift in y-direction <Jan-Willem hoger, to 0.50>
   min_shift_y <- minShiftFactorY * y_extent  # minimum shift in y-direction
-
+  
   nr_designs <- 1  # counter for number of accepted designs
 
   oldpoints <- netPts  # save initial design because new design may be rejected
@@ -45,7 +65,8 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
 
       delPts=rbind(oldDelPoints[which(selected_shifts_del>max_points_shift),],newDelPt)
       netPts=rbind(oldpoints[which(selected_shifts_net>max_points_shift),],oldDelPt)
-      criterion = calculateMukv(observations = netPts, predGrid = predGrid, model = model, ...)
+      criterion = calculateMukv(observations = netPts, predGrid = predGrid, model = model, 
+                  formulaString = formulaString, ...)
 
       p = runif(1) # to allow accepting an inferior design
       criterionIterf <- c(criterionIterf,oldcriterion)            
@@ -69,7 +90,7 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
         count = count + 1
         cat("No improvement for",count,"iterations ")
         cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
-        } else{
+      } else{
         criterion = oldcriterion
         olddelPt = oldDelPoints
         netPts = oldpoints
@@ -99,8 +120,8 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
 
 # scenario of addition
     if (action=="add"){
-      oldpoints = coordinates(oldpoints)
-      netPts = as.data.frame(coordinates(netPts))
+      oldpoints = as.data.frame(oldpoints)
+      netPts = as.data.frame(netPts)
       selected_shifts <- c(rep(max_points_shift+1,nn-nDiff),sample(seq(1,nDiff)))
       for (i in 1:nn){
         if (selected_shifts[i] > max_points_shift){
@@ -116,20 +137,31 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
         netPts[,1] <- oldpoints[,1] + x_shift*((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  # true shift in x-direction
         netPts[,2] <- oldpoints[,2] + y_shift*((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  # true shift in y_direction   
         net=netPts
-        coordinates(net)=~x+y
+        coordinates(net)= cform
         while(length(zerodist(net))[1]>0){
           netPts[,1] <- oldpoints[,1] + x_shift*((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  # true shift in x-direction
           netPts[,2] <- oldpoints[,2] + y_shift*((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  # true shift in y_direction
           net=netPts
-          coordinates(net)=~x+y
+          coordinates(net)=cform
           }
         pointx <- netPts[arraypos, 1]
         pointy <- netPts[arraypos, 2]
         pointxy <- netPts[arraypos,]
         tmpi <- coordinates(candidates@polygons[[1]]@Polygons[[1]])
         infield <- (point.in.polygon(pointx, pointy, tmpi[,1], tmpi[,2]))
+      }
+      coordinates(netPts) = cform
+      if (!is.null(formulaString) &&  !all(all.vars(formulaString)[-1] %in% cnames)) {
+        netPts@data[arraypos,1] = 0
+        for (i in 2:nvar) {
+          lres = krige(as.formula(paste(names(netPts)[i],"~1")), predGrid, 
+                          netPts[arraypos,], model = models[[i]], nmax = nmax, debug.level = 0)$var1.pred
+          if (is.factor(netPts@data[,i])) lres = factor(round(lres),level = levels(netPts@data[,i]))
+          netPts@data[arraypos,i] = lres
         }
-      criterion = calculateMukv(observations = netPts, predGrid = predGrid, model = model, ...)
+      }
+      criterion = calculateMukv(observations = netPts, predGrid = predGrid, model = model, 
+            formulaString = formulaString, ...)
       netPts <- as.data.frame(netPts) # need as dataframe for oldpoints
       p = runif(1) # to allow accepting an inferior design
       criterionIterf <- c(criterionIterf,oldcriterion)            
@@ -141,7 +173,7 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
         count = 0
         cat("No improvement for",count,"iterations ")
         cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
-        } else if (criterion > oldcriterion & p <= (start_p*exp(-10*k/nr_iterations))){
+      } else if (criterion > oldcriterion & p <= (start_p*exp(-10*k/nr_iterations))){
         oldpoints = netPts
         netPts = netPts
         oldcriterion = criterion
@@ -155,7 +187,7 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
         count = count + 1
         cat("No improvement for",count,"iterations ")
         cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
-        }
+      }
       netPts <<- netPts
       if (count < countMax) 
         {              
@@ -172,11 +204,10 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
 #  return(list(netPts = netPts, criterionIterf = criterionIterf, itNumber=length(criterionIterf)))
   
   if (!inherits(netPts,"Spatial")) {
-    netPts = data.frame(x = netPts[,1], y= netPts[,2])
-    coordinates(netPts) = ~x+y
+    coordinates(netPts) = cform
   }
   return(netPts)
-  }
+}
 
 
   

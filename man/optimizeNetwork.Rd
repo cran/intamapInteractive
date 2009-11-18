@@ -7,18 +7,25 @@ observation locations
 }
 \usage{
 optimizeNetwork(observations, predGrid, candidates, method, action,
-nDiff, model, criterion = "MUKV", plotOptim = TRUE, nGridCells, nTry, nr_iterations, ...)}
+nDiff, model, criterion = "MUKV", plotOptim = TRUE, nGridCells, nTry, nr_iterations,
+formulaString, ...)}
 
 \arguments{
-\item{observations}{ object of class \code{\link[base]{data.frame}} with x,y coordinates and possible covariates }
-\item{predGrid}{ object of class \code{\link[base]{data.frame}} with x,y coordinates of prediction locations when \code{method} is \code{"ssa"} }
-\item{candidates}{ when method is \code{"manual"}, candidates is the study area of class 
+\item{observations}{object of class \code{\link[sp:Spatial-class]{Spatial}}*
+               with coordinates and possible covariates }
+\item{predGrid}{object of class \code{\link[sp:Spatial-class]{Spatial}}*
+               with coordinates of prediction locations for optimization
+               when \code{method = "ssa"} }
+\item{candidates}{when \code{method = "manual"} or \code{method = "ssa"}, candidates is the study area of class 
 \code{\link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}}; for other methods, 
-when action is \code{"add"}, candidates is a \code{\link[base]{data.frame}} with x,y coordinates or 
-a \code{\link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}}}
-\item{method}{ character string: \code{"spcov"} for spatial coverage, \code{"ssa"} for spatial simulated annealing or \code{"manual"} for manual processing of the network}
-\item{action}{ character string indicating which type of action to simulate: 
-\code{"add"} to add new measurement stations to the existing network or \code{"del"} to turn off existing stations }
+when \code{action = add}, candidates are points or polygons of class 
+              \code{\link[sp:Spatial-class]{Spatial}}*.}
+\item{method}{ character string: \code{"spcov"} for spatial coverage, 
+           \code{"ssa"} for spatial simulated annealing or 
+           \code{"manual"} for manual processing of the network}
+\item{action}{ character string indicating which action to do with network:
+                 \code{"add"} to add new measurement stations to the existing 
+                 network or \code{"del"} to turn off existing stations }
 \item{nDiff}{ number of stations to add or delete }
 \item{model}{ variogram model to consider when \code{criterion = "mukv"}; 
          object of class \code{variogramModel},
@@ -28,19 +35,49 @@ a \code{\link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}}}
 \item{nGridCells}{ when method is \code{"spcov"} and action is \code{"add"}:  string forcing the number gridcells to explore for candidate locations of new measurements}
 \item{nTry}{ the method will try \code{nTry} initial configurations and will keep the best solution in order to reduce the risk of ending up with an unfavorable solution  }
 \item{nr_iterations}{ number of iterations before stoping }
-\item{...}{ other arguments to be passed on at lower level functions }
+\item{formulaString}{formula that defines the dependent variable as a linear model 
+      of independent variables; suppose the dependent variable has name \code{z}, 
+      for ordinary and simple kriging use the formula \code{z~1}; 
+      for universal kriging, suppose \code{z} is linearly dependent on 
+      \code{x} and \code{y}, use the formula \code{z~x+y}. Functions of 
+      dependent or independent variables are not possible.}
+\item{...}{ other arguments to be passed on at lower level functions.  }
 }
 
 \details{
-This function allows to build optimization scenarios with the choice of several options. 
-The user should be aware of the following limitations:\\
-Method \code{ssa} is only implemented for the criterion \code{mukv}.
-Input \code{candidates} should preferably be a continuous domain such as \code{SpatialPolygonsDataFrame}
-When \code{action = "add"}, candidates are taken from existing network \code{observations}
+This function contains different methods for optimization of measurement networks,
+either adding or removing observation locations.
+The methods can be validated using the function \code{\link{calculateMukv}} which
+return the mean universal kriging variance for a measurement network. This function is
+also used for the optimization criterion for \code{method = "ssa"} with 
+\code{criterion = "mukv"}.
+                                                        
+                                                         
+The user should be aware of the following limitations:
+\enumerate{
+\item{\code{method = "ssa"} is only implemented for \code{criterion = "mukv"}.}
+\item{Input \code{candidates} should preferably be a continuous domain such 
+             as \code{\link[sp:SpatialPolygons]{SpatialPolygons}}}
+\item{\code{method = "ssa"} makes it possible to assume a linear relationship between 
+      independent and dependent variables (observations or spatial locations), as in 
+      \code{\link[gstat:krige]{krige}}.
+      However, a correct estimate of the mean universal kriging variance in the 
+      prediction grid in this package requires that the independent variables are known 
+      at the candidate locations. This is not possible (except for the spatial
+      locations themselves), these are instead estimated
+      from the prediction locations.
+      This is an approximation that might influence the criterion used for optimization,
+      with increasing number of points added. This method can also slow down optimization.}
+\item{Note that it is not recommended to use independent variables which differ strongly 
+      in magnitude (as for traditional universal kriging).}
+\item{If no \code{formulaString} is supplied, it is assumed that the user will
+      optimize according to the mean ordinary kriging variance.}
+}
 }
 
 \value{
-Data frame with x,y coordinates of optimized locations
+Object of class \code{\link[sp:SpatialPoints]{SpatialPoints}}* with coordinates 
+of optimized locations (including the former observation locations when \code{action = "add"}).
 }
 
 \references{
@@ -59,42 +96,70 @@ Science, vol. 3., Elsevier, Amsterdam.
 
 \author{ Olivier Baume }
 
+\seealso{\code{\link{ssaOptim}}, \code{\link{spCovDel}}, \code{\link{spCovAdd}}, \code{\link{calculateMukv}}  }
 \examples{
 \dontrun{
+library(gstat)
 library(intamapInteractive)
-library(maptools)
-# use SIC2004 dataset
-data(sic2004)
-# load a shape file of the study area
-rpath = system.file("inst/external", package="intamapInteractive")
-setwd(rpath)
-candidates = readShapePoly("sic2004")
-# load the input for the observation and prediction locations
-# including the covariates for UK, and changing to more intuitive 
-# variable names
-coordinates(sic.val) = ~x+y
-observations = sic.val["dayx"] 
-predGrid= sic.grid
-# limit the number of prediction locations to have faster UK 
-# computations
-nGrid = length(predGrid$x)
-predGrid = predGrid[sample(seq(1,nGrid),1000),]
-coordinates(predGrid) = ~x+y
-# fit the variogram model (using function fit.variogram from package
-# gstat)
-model = fit.variogram(variogram(dayx~x+y, observations), vgm(50, "Sph", 250000, 250))
-plot(variogram(dayx~x+y, observations), model=model)
-# compute the Mukv of the current network
-initMukv <- calculateMukv(observations, predGrid, model)
-print(initMukv)
-# delete optimally 20 stations from current network with method "ssa"
-# (spatial simulated annealing) and criterion "mukv"
+options(error = recover)
+# load data:
+data(meuse)
+coordinates(meuse) = ~x+y
+data(meuse.grid)
+coordinates(meuse.grid) = ~x+y
+gridded(meuse.grid) = TRUE
+predGrid = meuse.grid
+
+# estimate variograms (OK/UK):
+vfitOK = fit.variogram(variogram(zinc~1, meuse), vgm(1, "Exp", 300, 1))
+vfitUK = fit.variogram(variogram(zinc~x+y, meuse), vgm(1, "Exp", 300, 1))
+vfitRK = fit.variogram(variogram(zinc~dist+ffreq+soil, meuse), vgm(1, "Exp", 300, 1))
+
+# study area of interest:
+bb = bbox(predGrid)
+boun = SpatialPoints(data.frame(x=c(bb[1,1],bb[1,2],bb[1,2],bb[1,1],bb[1,1]),
+                                y=c(bb[2,1],bb[2,1],bb[2,2],bb[2,2],bb[2,1])))
+Srl = Polygons(list(Polygon(boun)),ID = as.character(1))
+candidates = SpatialPolygonsDataFrame(SpatialPolygons(list(Srl)),
+                                      data = data.frame(ID=1))
+
+# add 20 more points assuming OK model (SSA method):
+ optimOK <- optimizeNetwork(meuse, meuse.grid, candidates = candidates,
+  method= "ssa", action= "add", nDiff = 20, model = vfitOK, criterion="MUKV",
+  nr_iterations=50, nmax=40)
 
 
-windows()
-optim = optimizeNetwork(observations, predGrid, candidates, method = "ssa", 
-            action = "del", nDiff = 20, model = model, criterion = "MUKV", plot = TRUE )
+# add 20 more points assuming OK model (SSA method):
+optimUK <- optimizeNetwork(meuse, meuse.grid, candidates = candidates,
+   method = "ssa", action = "add", nDiff = 20, model=vfitUK, criterion="MUKV",
+   nr_iterations = 50, nmax = 40, formulaString = zinc~x+y)
+
+# add 20 more points with auxiliary variables (SSA method):
+optimRK <- optimizeNetwork(meuse, meuse.grid, candidates=candidates,
+   method="ssa", action="add", nDiff=4, model=vfitRK, criterion="MUKV",
+   nr_iterations=50, formula=zinc~dist+ffreq+soil, nmax=200)
+
+# add optimally 20 stations from current network with method "spcov"
+# (spatial coverage method)
+optimSC = optimizeNetwork(meuse, meuse.grid, candidates, method = "spcov",
+            action = "add", nDiff = 10, model = model, criterion = "MUKV", plotOptim = TRUE,
+            nGridCells = 5000,nTry = 100 )
+
+# delete optimally 10 stations from current network with method "manual"
+optimMAN = optimizeNetwork(meuse, meuse.grid, candidates, method = "manual",
+            action = "del", nDiff = 10, model = model, criterion = "MUKV", plotOptim = TRUE )
+
+
+# comparison of results with ordinary kriging variogram, otherwise add formulaString
+calculateMukv(optimOK, predGrid, vfitOK) # ssa method, assuming ordinary kriging
+calculateMukv(optimUK, predGrid, vfitOK) # ssa method, using spatial location as covariates
+calculateMukv(optimRK, predGrid, vfitOK) # ssa method, using other variables as covariates
+calculateMukv(optimSC, predGrid, vfitOK) # spcov method
+calculateMukv(optimMAN, predGrid, vfitOK) # 10 stations manually deleted
+
 }
 }
 
 \keyword{spatial}
+
+

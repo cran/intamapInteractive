@@ -1,8 +1,8 @@
 options(error = recover)
-test = TRUE
+test = FALSE
 set.seed(1)
 library(intamapInteractive)
-require(maptools)
+#require(maptools)
 # for SIC2004 dataset
 data(sic2004)
 coordinates(sic.val) = ~x+y
@@ -58,7 +58,7 @@ print(initMukv)
 
 # Deletes manually 20 stations from current network with method
 # "manual" 
-if (FALSE) {
+if (test) {
 optimDel1=optimizeNetwork( observations,
                            method = "manual",
                            action = "del",
@@ -71,7 +71,7 @@ print(MukvDel1)
 
 # Deletes optimally 20 stations from current network with method
 # "spcov" (spatial coverage)
-if (test) {
+if (TRUE) {
 optim1 = optimizeNetwork(observations,
          	                method = "spcov",
                           action = "del",
@@ -86,7 +86,7 @@ print(MukvDel2)
 # Deletes optimally 20 stations from current network with method "ssa"
 # (spatial simulated annealing) and criterion "mukv"
 #windows()
-if (FALSE) {
+if (test) {
 optim2 = optimizeNetwork(observations ,
                           method = "ssa",
                           criterion = "MUKV",
@@ -106,7 +106,7 @@ print(MukvDel3)
 # Adds manually 20 stations from current network with method
 # "manual" 
 
-if (FALSE) {
+if (test) {
 optimAdd1=optimizeNetwork( observations,
                            method = "manual",
                            action = "add",
@@ -119,7 +119,7 @@ print(MukvAdd1)
 # Adds optimally 20 stations from current network with
 # method "spcov" (spatial coverage)
 
-if (test) {
+if (TRUE) {
   optimAdd2=optimizeNetwork( observations,
                            method = "spcov",
                            action = "add",
@@ -134,7 +134,7 @@ print(MukvAdd2)
 # Adds optimally 20 stations from current network with
 # method "ssa" (spatial simulated annealing) and
 # criterion "mukv"
-if (FALSE) {
+if (test) {
 optimAdd3=optimizeNetwork( observations ,
                            method = "ssa",
                            criterion = "MUKV",

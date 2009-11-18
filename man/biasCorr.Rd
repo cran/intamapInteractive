@@ -77,6 +77,7 @@ Environmetrics, Accepted.
 \code{\link{findLocalBias}}
 }
 \examples{
+\dontrun{
 library(intamapInteractive)
 
 data(meuse)
@@ -84,10 +85,11 @@ data(meuse.grid)
 observations = data.frame(x = meuse$x,y = meuse$y,value = log(meuse$zinc))
 coordinates(observations) = ~x+y
 gridded(meuse.grid) = ~x+y
-pBoundaries = spsample(observations, 10, "regular",bb = bbox(observations) +  
+pBoundaries = spsample(observations, 8, "regular",bb = bbox(observations) +  
               matrix(c(-400,-400,400,400),ncol=2),offset=c(0,0))
 gridded(pBoundaries) = TRUE
 cs = pBoundaries@grid@cellsize[1]/2
+dx = cs/5
 
 Srl = list()
 nb = dim(coordinates(pBoundaries))[1]
@@ -98,7 +100,8 @@ for (i in 1:nb) {
   y1 = pt1[2]-cs
   y2 = pt1[2]+cs
 
-  boun = data.frame(x=c(x1,x2,x2,x1,x1),y=c(y1,y1,y2,y2,y1))
+  boun = data.frame(x=c(seq(x1,x2,dx),rep(x2,11),seq(x2,x1,-dx),rep(x1,11)),
+                    y=c(rep(y1,11),seq(y1,y2,dx),rep(y2,11),seq(y2,y1,-dx)))
   coordinates(boun) = ~x+y
   boun = Polygon(boun)
   Srl[[i]] = Polygons(list(boun),ID = as.character(i))
@@ -113,6 +116,9 @@ object = createIntamapObject(observations,meuse.grid,boundaryLines = blines,
   params = list(removeBias = "regionalBias"))
 object = biasCorr(object,regCode= "ID")
 object$regionalBias$regionalBias
-
+pBoundaries$bias = NA
+pBoundaries$bias[object$regionalBias$regionalBias$ID] = object$regionalBias$regionalBias$ols
+spplot(pBoundaries,"bias",sp.layout = list(list("sp.points",observations)))
+}
 }
 \keyword{spatial}

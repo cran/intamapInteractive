@@ -1,5 +1,5 @@
 
-R version 2.10.0 alpha (2009-09-30 r49906)
+R version 2.10.0 (2009-10-26)
 Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > options(error = recover)
-> test = TRUE
+> test = FALSE
 > set.seed(1)
 > library(intamapInteractive)
 Loading required package: intamap
@@ -25,9 +25,9 @@ Loading required package: gstat
 Loading required package: rgdal
 Geospatial Data Abstraction Library extensions to R successfully loaded
 Loaded GDAL runtime: GDAL 1.6.2, released 2009/07/31
-Path to GDAL shared files: C:\Users\skoien\Documents/R/win-library/2.10/rgdal/gdal
+Path to GDAL shared files: c:/R/R-210~1.0/library/rgdal/gdal
 Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
-Path to PROJ.4 shared files: C:\Users\skoien\Documents/R/win-library/2.10/rgdal/proj
+Path to PROJ.4 shared files: c:/R/R-210~1.0/library/rgdal/proj
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -66,7 +66,7 @@ General Polygon Clipper Library for R (version 1.4-4)
 
 Loading required package: deldir
 deldir 0.0-8 
-spatstat 1.16-2  (Type 'help(spatstat)' for information)
+spatstat 1.17-0  (Type 'help(spatstat)' for information)
 
 Attaching package: 'spatstat'
 
@@ -77,9 +77,7 @@ Attaching package: 'spatstat'
 
 > require(maptools)
 Loading required package: maptools
-Warning message:
-In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE,  :
-  there is no package called 'maptools'
+Loading required package: foreign
 > # for SIC2004 dataset
 > data(sic2004)
 > coordinates(sic.val) = ~x+y
@@ -137,7 +135,7 @@ In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = T
 > 
 > # Deletes manually 20 stations from current network with method
 > # "manual" 
-> if (FALSE) {
+> if (test) {
 + optimDel1=optimizeNetwork( observations,
 +                            method = "manual",
 +                            action = "del",
@@ -150,7 +148,7 @@ In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = T
 > 
 > # Deletes optimally 20 stations from current network with method
 > # "spcov" (spatial coverage)
-> if (test) {
+> if (TRUE) {
 + optim1 = optimizeNetwork(observations,
 +          	                method = "spcov",
 +                           action = "del",
@@ -167,7 +165,7 @@ In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = T
 > # Deletes optimally 20 stations from current network with method "ssa"
 > # (spatial simulated annealing) and criterion "mukv"
 > #windows()
-> if (FALSE) {
+> if (test) {
 + optim2 = optimizeNetwork(observations ,
 +                           method = "ssa",
 +                           criterion = "MUKV",
@@ -187,7 +185,7 @@ In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = T
 > # Adds manually 20 stations from current network with method
 > # "manual" 
 > 
-> if (FALSE) {
+> if (test) {
 + optimAdd1=optimizeNetwork( observations,
 +                            method = "manual",
 +                            action = "add",
@@ -200,7 +198,7 @@ In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = T
 > # Adds optimally 20 stations from current network with
 > # method "spcov" (spatial coverage)
 > 
-> if (test) {
+> if (TRUE) {
 +   optimAdd2=optimizeNetwork( observations,
 +                            method = "spcov",
 +                            action = "add",
@@ -221,7 +219,7 @@ These locations have been removed. 198 location(s) have been retained
 > # Adds optimally 20 stations from current network with
 > # method "ssa" (spatial simulated annealing) and
 > # criterion "mukv"
-> if (FALSE) {
+> if (test) {
 + optimAdd3=optimizeNetwork( observations ,
 +                            method = "ssa",
 +                            criterion = "MUKV",

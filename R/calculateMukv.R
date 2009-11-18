@@ -1,22 +1,17 @@
 calculateMukv = function(observations, predGrid, model, formulaString, ...) {
 
+# Names changed for easier debugging 
     prG = predGrid
     obs = observations
-    if (missing(formulaString)) {
-      numPredictors = dim(prG)[2] # JS: Not necessary with separate xy coordinates if predGrid is spdf - 2 # -2 for two xy coordinates 
-      if (!is.null(numPredictors) && numPredictors > 0)  {
-        predictors = names(prG[1:length(names(prG))])
-      } else  {
-        predictors = "1"
-      }
-      if ("data" %in% getSlots(class(obs))) {
-        obs$dum = 1
-      } else obs = SpatialPointsDataFrame(obs,data = data.frame(dum = rep(1,dim(coordinates(obs))[1])))
-      predictors = paste(predictors, collapse =" + ")
-      dum2 = "dum ~"
-      eq = as.formula(paste(noquote(paste(dum2, predictors))))
-    } else eq = formulaString
-    
+    if (missing(formulaString) || is.null(formulaString))
+        eq = dum~1 else eq = formulaString
+
+    if (!"data" %in% getSlots(class(obs)) & 
+          (terms(eq)[[3]] == 1 || 
+            all(all.vars(eq)[-1] %in% dimnames(coordinates(obs))[[2]]))){ 
+        obs = SpatialPointsDataFrame(obs,data = data.frame(dum = rep(1,dim(coordinates(obs))[1])))
+        names(obs) = as.character(eq[[2]])
+     }
 #    prG$dum = 1
 #    test = noquote(paste(dum2, predictors))
     red_ann_gam_krig = krige(eq, obs, prG, model) 
