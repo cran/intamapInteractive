@@ -1,4 +1,0 @@
-changed dependence order, to get interp from akima instead of ggplot2.
---This line, and those below, will be ignored--
-
-M    DESCRIPTION

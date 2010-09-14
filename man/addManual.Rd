@@ -21,4 +21,3 @@ Data frame with added or deleted observations optimized locations
 \url{http://www.intamap.org/}
 }
 \author{ Olivier Baume }
-\keyword{}

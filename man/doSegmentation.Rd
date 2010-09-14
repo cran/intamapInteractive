@@ -91,7 +91,7 @@ Proceedings (ed. G. Dubois).
 library(intamapInteractive)
 
 data(walker)
-coordinates(walker)=~X+Y
+# coordinates(walker)=~X+Y
 object=createIntamapObject(observations=walker)
 object=doSegmentation(object)
 

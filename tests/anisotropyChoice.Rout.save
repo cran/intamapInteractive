@@ -74,7 +74,6 @@ Attaching package: 'spatstat'
 
 > 
 > data(walker)
-> coordinates(walker)=~X+Y
 > object=createIntamapObject(observations=walker)
 [1] "createIntamapProject: formulaString is missing, using:  Id ~1"
 Warning message:

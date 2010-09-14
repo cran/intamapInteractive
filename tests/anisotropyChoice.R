@@ -1,7 +1,6 @@
 library(intamapInteractive)
 
 data(walker)
-coordinates(walker)=~X+Y
 object=createIntamapObject(observations=walker)
 object=anisotropyChoice(object)
 
