@@ -20,4 +20,4 @@ export(
   	ssaOptim
 )
 
-S3Method(preProcess, removeBias)
+S3method(preProcess, removeBias)
