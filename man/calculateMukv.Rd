@@ -8,8 +8,11 @@ Computes MUKV for given geostatistical parameters
 calculateMukv(observations, predGrid, model, formulaString, ...)
 }
 \arguments{
-\item{observations}{ Data frame with x,y coordinates of observations and possible covariates }
-\item{predGrid}{ Data frame with x,y coordinates of prediction locations }
+\item{observations}{ \code{\link[sp]{SpatialPoints}} or  \code{\link[sp]{SpatialPointsDataFrame}} 
+     with observation locations and possible covariates }
+\item{predGrid}{ \code{\link[sp:Spatial-class]{Spatial}} object with coordinates of 
+     prediction locations (usually \code{\link[sp:SpatialPixels]{SpatialGrid}} 
+       or \code{\link[sp:SpatialPixelsDataFrame]{SpatialGridDataFrame}})}
 \item{model}{ Variogram model:object of class \code{variogramModel}, of the form
                 created by \code{\link[gstat:vgm]{vgm}}}
 \item{formulaString}{formula that defines the dependent variable as a linear model 

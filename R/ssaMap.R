@@ -7,17 +7,26 @@
 ############################################################################
 
 ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX, minShiftFactorX, 
-                  maxShiftFactorY, minShiftFactorY, start_p, countMax, 
-                  netPts, addPts, delPts, crit1, nn, action, nDiff, netPtsInit, nr_iterations, plotOptim,
-                  formulaString = NULL, models, nmax = 200, ...) {
-
-#  largest_poly <- sapply(slot(candidates, "polygons"), function(x) slot(x, "plotOrder"))[1] # largest polygon
-#  studyareacoords <- coordinates(candidates@polygons[[1]]@Polygons[[largest_poly]]) 
+                  maxShiftFactorY, minShiftFactorY, start_p,  
+                  netPts, addPts, delPts, crit1, nn, action, nDiff, netPtsInit, 
+                  nr_iterations, plotOptim,
+                  formulaString = NULL, models, nmax = 200, coolingFactor = nr_iterations/10, 
+                  covariates = "over", countMax = 200, ...) {
+  
+  
+ 
   cnames = dimnames(coordinates(netPts))[[2]]
+# which are the coordinate variables of the data.frame of the locations  
+  cvar = which(names(as.data.frame(netPts)) %in% cnames)
+
   nvar = dim(as.data.frame(netPts))[2]-2
   cform = as.formula(paste("~",cnames[1],"+",cnames[2]))
   count = 0
-
+#### Using the values of first record in case points are sampled outside predGrid
+  if (is.null(formulaString) || length(attr(terms(formulaString), "term.labels")) == 0 ||
+     all(attr(terms(formulaString), "term.labels") %in% cnames)) 
+    covariates = NULL
+  if (!is.null(covariates) && covariates == "over") gerr = predGrid@data[1,]
 
 # 
   if (missing(candidates)) {
@@ -50,11 +59,9 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
   criterionInitial <- crit1
   oldcriterion <- criterionInitial  # also save current criterion
   oldDelPoints <- delPts
-
   criterionIterf <- NULL
-
-  for (k in 1:100000){
-    
+  bestCriterion = Inf
+  for (k in 1:nr_iterations) {
 # scenario of deletion
     if (action == "del") {    
 
@@ -68,144 +75,154 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
       criterion = calculateMukv(observations = netPts, predGrid = predGrid, model = model, 
                   formulaString = formulaString, ...)
 
-      p = runif(1) # to allow accepting an inferior design
-      criterionIterf <- c(criterionIterf,oldcriterion)            
-      if (criterion <= oldcriterion){
-        oldpoints = netPts
-        netPts = netPts
-        oldDelPoints = delPts
-        delPts = delPts
-        oldcriterion = criterion
-        nr_designs = nr_designs+1
-        count = 0
-        cat("No improvement for",count,"iterations ")
-        cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
-      } else if (criterion > oldcriterion & p <= (start_p*exp(-10*k/nr_iterations))){
-        oldpoints = netPts
-        netPts = netPts
-        oldDelPoints = delPts
-        delPts = delPts
-        oldcriterion = criterion
-        nr_designs = nr_designs+1
-        count = count + 1
-        cat("No improvement for",count,"iterations ")
-        cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
-      } else{
-        criterion = oldcriterion
-        olddelPt = oldDelPoints
-        netPts = oldpoints
-        nr_designs = nr_designs
-        count = count + 1
-        cat("No improvement for",count,"iterations ")
-        cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
-      }
-      netPts <<- netPts
-      if (count < countMax) 
-        {
-        if (plotOptim){
-          if (!is.na(candidates))
-            {                     
-            plot(candidates)
-            points(oldpoints, col = 1, pch = 19, cex = 0.7)
-            points(oldDelPoints, col = 2, pch = "X", cex = 1.2)
-            title('Simulated annealing', xlab=(paste("Criterion = ", round(criterion, digits=5))), ylab=(paste("Iterations = ", k)));
-            } else {
-            plot(oldpoints, col = 1, pch = 19, cex = 0.7)
-            points(oldDelPoints, col = 2, pch = "X", cex = 1.2)
-            title('Simulated annealing', xlab=(paste("Criterion = ", round(criterion, digits=5))), ylab=(paste("Iterations = ", k)));
-            }
-          }
-        } else {break}
-    }
-
+    } else if (action=="add") {
 # scenario of addition
-    if (action=="add"){
       oldpoints = as.data.frame(oldpoints)
       netPts = as.data.frame(netPts)
       selected_shifts <- c(rep(max_points_shift+1,nn-nDiff),sample(seq(1,nDiff)))
-      for (i in 1:nn){
-        if (selected_shifts[i] > max_points_shift){
-          selected_shifts[i] = 0} else {
-          selected_shifts[i] = 1
-        } # no shift for this point SJM... these points
-      }
-      arraypos<-which.max(selected_shifts)
-      infield <- 0
-      while (infield<1){
-        x_shift <- max_shift_x-k/nr_iterations*(max_shift_x-min_shift_x)  # possible shift in x-direction decreases linearly
-        y_shift <- max_shift_y-k/nr_iterations*(max_shift_y-min_shift_y)  # possible shift in y-direction decreases linearly
-        netPts[,1] <- oldpoints[,1] + x_shift*((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  # true shift in x-direction
-        netPts[,2] <- oldpoints[,2] + y_shift*((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  # true shift in y_direction   
+      arraypos <- which(selected_shifts<=max_points_shift)
+      selected_shifts[-arraypos] = 0
+      outside = "TRUE"
+      while (outside){
+        x_shift <- max_shift_x-k/nr_iterations*(max_shift_x-min_shift_x)  
+# possible shift in x-direction decreases linearly
+        y_shift <- max_shift_y-k/nr_iterations*(max_shift_y-min_shift_y)  
+# possible shift in y-direction decreases linearly
+        netPts[,cvar[1]] <- oldpoints[,cvar[1]] + x_shift*
+            ((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  
+# true shift in x-direction
+        netPts[,cvar[2]] <- oldpoints[,cvar[2]] + y_shift*
+            ((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  
+# true shift in y_direction   
         net=netPts
         coordinates(net)= cform
         while(length(zerodist(net))[1]>0){
-          netPts[,1] <- oldpoints[,1] + x_shift*((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  # true shift in x-direction
-          netPts[,2] <- oldpoints[,2] + y_shift*((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  # true shift in y_direction
+          netPts[,cvar[1]] <- oldpoints[,cvar[1]] + x_shift*
+              ((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  
+# true shift in x-direction
+          netPts[,cvar[2]] <- oldpoints[,cvar[2]] + y_shift*
+              ((as.matrix(rep(-1,nn))+2*as.matrix(runif(nn)))*as.matrix(selected_shifts))  
+# true shift in y_direction
           net=netPts
           coordinates(net)=cform
           }
-        pointx <- netPts[arraypos, 1]
-        pointy <- netPts[arraypos, 2]
+        pointx <- netPts[arraypos, cvar[1]]
+        pointy <- netPts[arraypos, cvar[2]]
         pointxy <- netPts[arraypos,]
-        tmpi <- coordinates(candidates@polygons[[1]]@Polygons[[1]])
-        infield <- (point.in.polygon(pointx, pointy, tmpi[,1], tmpi[,2]))
+        projxy = proj4string(candidates)
+        outside <- is.na(over(SpatialPoints(matrix(c(pointx, pointy), ncol = 2), 
+              proj4string = CRS(as.character(projxy))), candidates)[1])
       }
+      
       coordinates(netPts) = cform
-      if (!is.null(formulaString) &&  !all(all.vars(formulaString)[-1] %in% cnames)) {
-        netPts@data[arraypos,1] = 0
-        for (i in 2:nvar) {
-          lres = krige(as.formula(paste(names(netPts)[i],"~1")), predGrid, 
-                          netPts[arraypos,], model = models[[i]], nmax = nmax, debug.level = 0)$var1.pred
-          if (is.factor(netPts@data[,i])) lres = factor(round(lres),level = levels(netPts@data[,i]))
-          netPts@data[arraypos,i] = lres
-        }
+      if (!is.null(covariates)) {
+        gridded(predGrid) = TRUE
+        if (covariates == "over") {
+           overselect<-over(SpatialPoints(netPts[arraypos,]), predGrid)
+          if (is.na(overselect[1])) overselect = gerr
+          for (i in 2:nvar) {
+            if (is.factor(netPts@data[,i]) & !is.factor(overselect[i-1])) 
+                overselect[i-1] = factor(overselect[i-1],level = levels(netPts@data[,i]))
+            netPts@data[arraypos,i] = overselect[i-1]
+          }
+        } else if (covariates == "krige") {
+          netPts@data[arraypos,1] = 0
+          for (i in 2:nvar) {
+            lres = krige(as.formula(paste(names(netPts)[i],"~1")), predGrid, 
+                          netPts[arraypos,], model = models[[i]], nmax = nmax, 
+                          debug.level = 0)$var1.pred
+            if (is.factor(netPts@data[,i])) lres = factor(round(lres),level = levels(netPts@data[,i]))
+            netPts@data[arraypos,i] = lres
+          }
+        } else stop(paste("Not able to use method", covariates, "for interpolating covariates"))
       }
       criterion = calculateMukv(observations = netPts, predGrid = predGrid, model = model, 
             formulaString = formulaString, ...)
       netPts <- as.data.frame(netPts) # need as dataframe for oldpoints
-      p = runif(1) # to allow accepting an inferior design
-      criterionIterf <- c(criterionIterf,oldcriterion)            
-      if (criterion <= oldcriterion){
-        oldpoints = netPts
-        netPts = netPts
-        oldcriterion = criterion
-        nr_designs = nr_designs+1
-        count = 0
-        cat("No improvement for",count,"iterations ")
-        cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
-      } else if (criterion > oldcriterion & p <= (start_p*exp(-10*k/nr_iterations))){
-        oldpoints = netPts
-        netPts = netPts
-        oldcriterion = criterion
-        nr_designs = nr_designs+1
-        count = count + 1
-        cat("No improvement for",count,"iterations ")
-        cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
-        } else {
-        criterion = oldcriterion
-        netPts = oldpoints
-        count = count + 1
-        cat("No improvement for",count,"iterations ")
-        cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
-      }
-      netPts <<- netPts
-      if (count < countMax) 
-        {              
-        if (plotOptim == TRUE){
-          plot(candidates)
-          points(netPtsInit, col=1, pch = 19, cex = 0.7)  
-          points(netPts[(nn-nDiff+1):nn,],  col = "green", pch = 19)
-          points(pointxy,  col = 2, pch = 19)
-          title('Simulated annealing', xlab=(paste("Criterion = ", round(criterion, digits=5))), ylab=(paste("Iterations = ", k)))
-          } 
-        } else {break}
+    }
+
+    p = runif(1) # to allow accepting an inferior design
+    if (criterion <= oldcriterion){
+      oldpoints = netPts
+      if (action == "del") oldDelPoints = delPts
+      oldcriterion = criterion
+      nr_designs = nr_designs+1
+      count = 0
+      cat("No improvement for",count,"iterations ")
+      cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
+    } else if (criterion > oldcriterion & p <= (start_p*exp(-k/coolingFactor))){
+      oldpoints = netPts
+      if (action == "del") oldDelPoints = delPts
+      oldcriterion = criterion
+      nr_designs = nr_designs+1
+      count = count + 1
+      cat("No improvement for",count,"iterations  p = ", p, "lim = ",start_p*exp(-k/coolingFactor) )
+      cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
+    } else{
+      criterion = oldcriterion
+      if (action == "del") oldDelPt = oldDelPoints
+      netPts = oldpoints
+      nr_designs = nr_designs
+      count = count + 1
+      cat("No improvement for",count,"iterations ")
+      cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
+    }
+    criterionIterf[k] <- criterion
+    if (criterion < bestCriterion/1.0000001) {
+      bestNetPts = netPts
+      bestCriterion = criterion
+      bestOldcriterion = oldcriterion
+      bestOldpoints = oldpoints
+      if (action == "del") {
+        bestOldDelPoints = oldDelPoints
+        bestOldDelPt = oldDelPt
+        bestDelPts = delPts
       }
     }
-#  return(list(netPts = netPts, criterionIterf = criterionIterf, itNumber=length(criterionIterf)))
-  
-  if (!inherits(netPts,"Spatial")) {
-    coordinates(netPts) = cform
-  }
+
+    if (plotOptim){
+      if (!missing(candidates)) {                     
+        plot(candidates)
+        if (action == "del") {
+          points(oldpoints, col = 1, pch = 19, cex = 0.7)
+          points(oldDelPoints, col = 2, pch = "X", cex = 1.2)
+        } else {
+          points(netPtsInit, col=1, pch = 19, cex = 0.7)  
+          points(netPts[(nn-nDiff+1):nn,cvar],  col = "green", pch = 19)
+          points(pointxy,  col = 2, pch = 19)
+        }
+      } else {
+        plot(oldpoints, col = 1, pch = 19, cex = 0.7)
+        points(oldDelPoints, col = 2, pch = "X", cex = 1.2)
+      }
+      title('Spatial Simulated Annealing', 
+                xlab=(paste("Criterion = ",  signif(criterion, digits=5),
+                       "(Best Criterion = ",  signif(bestCriterion, digits=5),")")), 
+                ylab=(paste("Iterations = ", k)))
+    }
+
+    if (count == countMax) {
+      if (criterion > bestCriterion*1.000001) {
+        oldpoints = bestOldpoints
+        netPts = bestNetPts
+        oldcriterion = bestOldcriterion
+        criterion = bestCriterion
+        if (action == "del") {
+          oldDelPoints = bestOldDelPoints 
+          oldDelPt = bestOldDelPt 
+          delPts = bestDelPts
+        }
+        nr_designs = nr_designs + 1
+        count = 0
+        cat("Reached countMax with suboptimal design, restarting with previously best design \n")
+        cat("No improvement for",count,"iterations ")
+        cat("[Will stop at",countMax,"iterations with no improvement]", "\n")
+      } else break
+    }
+  } 
+
+  if (!inherits(netPts,"Spatial")) coordinates(netPts) = cform
+  attr(netPts,"criterion") = criterionIterf
   return(netPts)
 }
 

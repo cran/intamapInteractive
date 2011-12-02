@@ -7,7 +7,8 @@ Optimization of measurement network with Spatial simulated annealing and MUKV
 }
 \usage{
 ssaOptim(observations, predGrid, candidates, action, nDiff, model,
-nr_iterations, plotOptim, formulaString, ...)
+nr_iterations, plotOptim = TRUE, formulaString = NULL, coolingFactor = nr_iterations/10,
+covariates = "over", ...)
 }
 \arguments{
 \item{observations}{ Data frame with x,y coordinates of observations and possible covariates }
@@ -28,6 +29,10 @@ nr_iterations, plotOptim, formulaString, ...)
       \code{x} and \code{y}, use the formula \code{z~x+y}. The formulaString defaults
       to \code{"value~1"} if \code{value} is a part of the data set. 
       If not, the first column of the data set is used. }
+\item{coolingFactor}{variable defining how fast ssa-algorithm should cool down.
+      Smaller numbers give quicker cooling, higher numbers give slower cooling}
+\item{covariates}{variable defining whether possible covariates should be found 
+         by "over" or "krige", see also details below}
 \item{...}{ other arguments to be passed on lower level functions }
 }
 
@@ -47,6 +52,15 @@ It is possible to assume a linear relationship between
       from the prediction locations.
       This is an approximation that might influence the criterion used for optimization,
       with increasing number of points added. This method can also slow down optimization.
+      There are two possible methods for this that can be set with the argument \code{covariates}: 
+      \code{\link[sp]{over}} and \code{\link[gstat]{krige}}.
+      The first one finds the covariates of new locations from overlaying the prediction grid, 
+      taking the value of 
+      the nearest neighbour. The second method uses kriging to estimate the values of the 
+      covariates at the new locations. The first method is generally faster, the second
+      method most likely more exact, and particularly if the resolution of the prediction grid is low
+      compared to the spatial correlation lengths of the covariates. 
+
 }
 
 \value{

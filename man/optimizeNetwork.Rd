@@ -126,24 +126,24 @@ candidates = SpatialPolygonsDataFrame(SpatialPolygons(list(Srl)),
 # add 20 more points assuming OK model (SSA method):
  optimOK <- optimizeNetwork(meuse, meuse.grid, candidates = candidates,
   method= "ssa", action= "add", nDiff = 20, model = vfitOK, criterion="MUKV",
-  nr_iterations=50, nmax=40)
+  nr_iterations=10000, nmax=40)
 
 
-# add 20 more points assuming OK model (SSA method):
+# add 20 more points assuming UK model (SSA method):
 optimUK <- optimizeNetwork(meuse, meuse.grid, candidates = candidates,
    method = "ssa", action = "add", nDiff = 20, model=vfitUK, criterion="MUKV",
-   nr_iterations = 50, nmax = 40, formulaString = zinc~x+y)
+   nr_iterations = 10000, nmax = 40, formulaString = zinc~x+y)
 
 # add 20 more points with auxiliary variables (SSA method):
 optimRK <- optimizeNetwork(meuse, meuse.grid, candidates=candidates,
    method="ssa", action="add", nDiff=4, model=vfitRK, criterion="MUKV",
-   nr_iterations=50, formula=zinc~dist+ffreq+soil, nmax=200)
+   nr_iterations=10000, formula=zinc~dist+ffreq+soil, nmax=200)
 
 # add optimally 20 stations from current network with method "spcov"
 # (spatial coverage method)
 optimSC = optimizeNetwork(meuse, meuse.grid, candidates, method = "spcov",
             action = "add", nDiff = 10, model = model, criterion = "MUKV", plotOptim = TRUE,
-            nGridCells = 5000,nTry = 100 )
+            nGridCells = 10000,nTry = 100 )
 
 # delete optimally 10 stations from current network with method "manual"
 optimMAN = optimizeNetwork(meuse, meuse.grid, candidates, method = "manual",

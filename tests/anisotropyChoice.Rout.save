@@ -1,7 +1,8 @@
 
-R version 2.9.2 (2009-08-24)
-Copyright (C) 2009 The R Foundation for Statistical Computing
+R version 2.13.1 (2011-07-08)
+Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: x86_64-pc-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -16,16 +17,75 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(intamapInteractive)
-Loading required package: intamap
-Loading required package: sp
-Loading required package: gstat
+Loading required package: spcosa
+Loading required package: rJava
+Loading required package: ggplot2
+Loading required package: reshape
+Loading required package: plyr
+
+Attaching package: 'reshape'
+
+The following object(s) are masked from 'package:plyr':
+
+    rename, round_any
+
+Loading required package: grid
+Loading required package: proto
 Loading required package: rgdal
+Loading required package: sp
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.6.2, released 2009/07/31
-Path to GDAL shared files: c:/R/R-29~1.2/library/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
-Path to PROJ.4 shared files: c:/R/R-29~1.2/library/rgdal/proj
+Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
+Path to GDAL shared files: C:/Program Files/R/R-2.13.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.13.1/library/rgdal/proj
+Note: 'spcosa' requires Java (>= 6.0), which is available at www.java.com
+Loading required package: spatstat
+Loading required package: mgcv
+This is mgcv 1.7-9. For overview type 'help("mgcv-package")'.
+Loading required package: deldir
+deldir 0.0-15
+
+     Please note: The process for determining duplicated points
+     has changed from that used in version 0.0-9 (and previously).
+
+spatstat 1.24-1 
+Type 'help(spatstat)' for an overview of spatstat 
+     'latest.news()' for news on latest version 
+     'licence.polygons()' for licence information on polygon calculations
+
+Attaching package: 'spatstat'
+
+The following object(s) are masked from 'package:ggplot2':
+
+    rescale
+
+Loading required package: intamap
+Loading required package: gstat
+Loading required package: spacetime
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date
+
+Loading required package: xts
+
+Attaching package: 'gstat'
+
+The following object(s) are masked from 'package:spatstat':
+
+    idw
+
 Loading required package: akima
+
+Attaching package: 'akima'
+
+The following object(s) are masked from 'package:ggplot2':
+
+    interp
+
 Loading required package: automap
 Loading required package: mvtnorm
 Loading required package: MASS
@@ -34,48 +94,15 @@ Loading required package: lattice
 
 Attaching package: 'lattice'
 
+The following object(s) are masked from 'package:evd':
 
-	The following object(s) are masked from package:evd :
+    qq
 
-	 qq 
-
-Loading required package: spcosa
-Loading required package: rJava
-Loading required package: ggplot2
-Loading required package: proto
-Loading required package: grid
-Loading required package: reshape
-Loading required package: plyr
-
-Attaching package: 'ggplot2'
-
-
-	The following object(s) are masked from package:grid :
-
-	 nullGrob 
-
-Loading required package: spatstat
-Loading required package: mgcv
-This is mgcv  1.5-5 . For overview type `help("mgcv-package")'.
-Loading required package: gpclib
-General Polygon Clipper Library for R (version 1.4-4)
-	Type 'class ? gpc.poly' for help
-
-Loading required package: deldir
-deldir 0.0-8 
-spatstat 1.16-2  (Type 'help(spatstat)' for information)
-
-Attaching package: 'spatstat'
-
-
-	The following object(s) are masked from package:ggplot2 :
-
-	 rescale 
-
+There were 12 warnings (use warnings() to see them)
 > 
 > data(walker)
 > object=createIntamapObject(observations=walker)
-[1] "createIntamapProject: formulaString is missing, using:  Id ~1"
+[1] "createIntamapObject: formulaString is missing, using:  Id ~1"
 Warning message:
 In createIntamapObject(observations = walker) :
   createIntamapObject: No prediction locations submitted - sampling from bbox of observations
