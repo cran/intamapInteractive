@@ -6,9 +6,9 @@
 \description{
 This package provides some added functionality to the 
 \code{link[intamap]{intamap-package}} for automatic interpolation of environmental 
-variables. Whereas \code{link[intamap]{intamap-package}} was particularly developed
-as a statistical back-end of a Web Processing Service (WPS), does this package 
-offer some functionality that is not possible to access through such a WPS.
+variables. Whereas \code{link[intamap]{intamap-package}} was specifically developed
+as a statistical back-end for a Web Processing Service (WPS), this package 
+offers some functionality that is not possible to access through such a WPS.
 
 The methods in this package can mainly be put into three groups:
 

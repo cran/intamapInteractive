@@ -5,8 +5,8 @@ function (observations, predGrid, candidates, action, nDiff,
 {
 
   if (missing(formulaString) || is.null(formulaString)) {
-    netPts = SpatialPointsDataFrame(netPts,
-          data = data.frame(dum = rep(1, dim(coordinates(netPts))[1])))
+    observations = SpatialPointsDataFrame(observations,
+          data = data.frame(dum = rep(1, dim(coordinates(observations))[1])))
     formulaString = dum ~ 1
   }
     nn = dim(coordinates(observations))[1]

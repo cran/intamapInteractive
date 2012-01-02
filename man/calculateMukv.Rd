@@ -2,7 +2,7 @@
 \alias{calculateMukv}
 \title{MUKV computation}
 \description{
-Computes MUKV for given geostatistical parameters
+Computes mean universal kriging variance (MUKV) for given geostatistical parameters
 }
 \usage{
 calculateMukv(observations, predGrid, model, formulaString, ...)
@@ -12,7 +12,8 @@ calculateMukv(observations, predGrid, model, formulaString, ...)
      with observation locations and possible covariates }
 \item{predGrid}{ \code{\link[sp:Spatial-class]{Spatial}} object with coordinates of 
      prediction locations (usually \code{\link[sp:SpatialPixels]{SpatialGrid}} 
-       or \code{\link[sp:SpatialPixelsDataFrame]{SpatialGridDataFrame}})}
+       or \code{\link[sp:SpatialPixelsDataFrame]{SpatialGridDataFrame}} when 
+       independent covariate predictor variables are used) }
 \item{model}{ Variogram model:object of class \code{variogramModel}, of the form
                 created by \code{\link[gstat:vgm]{vgm}}}
 \item{formulaString}{formula that defines the dependent variable as a linear model 
@@ -38,5 +39,30 @@ MUKV value
 \references{
 \url{http://www.intamap.org/}
 }
-\author{ S.J. Melles and O. Baume }
+\author{ S.J. Melles, O. Baume, J. Skoien }
+\examples{
+\dontrun{
+
+library(gstat)
+library(intamapInteractive)
+
+# load data:
+data(meuse)
+coordinates(meuse) = ~x+y
+data(meuse.grid)
+coordinates(meuse.grid) = ~x+y
+gridded(meuse.grid) = TRUE
+meuse.grid$soil = factor(meuse.grid$soil)
+
+# estimate variogram:
+smplvarUK = variogram(zinc~dist+ffreq+soil, meuse)
+plot(smplvarUK)
+vfitUK = fit.variogram(variogram(zinc~dist+ffreq+soil, meuse), vgm(1, "Exp", 300, 1))
+plot(smplvarUK, vfitUK)
+
+calculateMukv(meuse, meuse.grid, vfitUK, zinc~dist+ffreq+soil)
+
+}
+}
+
 \keyword{spatial}

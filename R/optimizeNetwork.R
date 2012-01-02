@@ -16,10 +16,10 @@ function (observations, predGrid, candidates, method, action,
         }
     }
     if (length(action) == 0)
-        stop(cat("No 'action' defined ... write 'add' or 'del'."))
+        stop(cat("No 'action' defined ... choose 'add' or 'del'."))
     if (length(action) > 0) {
         if (action != "add" & action != "del")
-            stop(cat("No relevant 'action' defined ... write 'add' or 'del'."))
+            stop(cat("No relevant 'action' defined ... choose 'add' or 'del'."))
         if (action == "add") {
             if (length(candidates) == 0 | class(candidates) !=
                 "SpatialPolygonsDataFrame")
