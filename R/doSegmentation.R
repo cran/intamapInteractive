@@ -296,7 +296,7 @@ calculateDensity<-function(x,y,gd,L,pl,dev){
 	
 	#Plot the Density
 	if(pl==TRUE){
-	filled.contour(density_L,color=terrain.colors)
+	filled.contour(density_L,color.palette=terrain.colors)
 		if(dev==TRUE){
 			dev.copy2eps(file="smoothed")
 		}	

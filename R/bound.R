@@ -15,8 +15,8 @@ findBoundaryLines = function(polygons, projOrig, projNew,regCode = "regCode") {
 #    writePolyShape(polygons,"regionLim")
   if (!missing(projOrig)) {
     proj4string(polygons) = CRS(projOrig)
-    if (!missing(projNew) & projOrig != projNew) {
-      polygons = spTransform(polygons, CRS(projNew))
+    if (!missing(projNew) & projOrig != projNew & require(rgdal)) {
+      polygons = rgdal::spTransform(polygons, CRS(projNew))
     }
   }
   boundaryLines = findBoundaries(polygons,regCode)

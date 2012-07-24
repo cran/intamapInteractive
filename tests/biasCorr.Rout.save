@@ -1,6 +1,6 @@
 
-R version 2.13.1 (2011-07-08)
-Copyright (C) 2011 The R Foundation for Statistical Computing
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-mingw32/x64 (64-bit)
 
@@ -20,46 +20,27 @@ Type 'q()' to quit R.
 Loading required package: spcosa
 Loading required package: rJava
 Loading required package: ggplot2
-Loading required package: reshape
-Loading required package: plyr
-
-Attaching package: 'reshape'
-
-The following object(s) are masked from 'package:plyr':
-
-    rename, round_any
-
-Loading required package: grid
-Loading required package: proto
-Loading required package: rgdal
-Loading required package: sp
-Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
-Path to GDAL shared files: C:/Program Files/R/R-2.13.1/library/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: C:/Program Files/R/R-2.13.1/library/rgdal/proj
 Note: 'spcosa' requires Java (>= 6.0), which is available at www.java.com
 Loading required package: spatstat
 Loading required package: mgcv
-This is mgcv 1.7-9. For overview type 'help("mgcv-package")'.
+This is mgcv 1.7-18. For overview type 'help("mgcv-package")'.
 Loading required package: deldir
-deldir 0.0-15
+deldir 0.0-19
 
-     Please note: The process for determining duplicated points
+     PLEASE NOTE:  The components "delsgs" and "summary" of the 
+     object returned by deldir() are now DATA FRAMES rather than 
+     matrices (as they were prior to release 0.0-18). 
+     See help("deldir").
+ 
+     PLEASE NOTE: The process for determining duplicated points
      has changed from that used in version 0.0-9 (and previously).
 
-spatstat 1.24-1 
+spatstat 1.28-1 
 Type 'help(spatstat)' for an overview of spatstat 
      'latest.news()' for news on latest version 
      'licence.polygons()' for licence information on polygon calculations
-
-Attaching package: 'spatstat'
-
-The following object(s) are masked from 'package:ggplot2':
-
-    rescale
-
 Loading required package: intamap
+Loading required package: sp
 Loading required package: gstat
 Loading required package: spacetime
 Loading required package: zoo
@@ -68,7 +49,7 @@ Attaching package: 'zoo'
 
 The following object(s) are masked from 'package:base':
 
-    as.Date
+    as.Date, as.Date.numeric
 
 Loading required package: xts
 
@@ -79,13 +60,6 @@ The following object(s) are masked from 'package:spatstat':
     idw
 
 Loading required package: akima
-
-Attaching package: 'akima'
-
-The following object(s) are masked from 'package:ggplot2':
-
-    interp
-
 Loading required package: automap
 Loading required package: mvtnorm
 Loading required package: MASS
@@ -98,7 +72,6 @@ The following object(s) are masked from 'package:evd':
 
     qq
 
-There were 12 warnings (use warnings() to see them)
 > set.seed(1)
 > data(meuse)
 > data(meuse.grid)
@@ -171,3 +144,6 @@ x6   0.1362053 0.90413195
 x7   2.8218567 0.10598952
 x8   5.3189124 0.03357700
 > 
+> proc.time()
+   user  system elapsed 
+   4.47    0.53    4.99 

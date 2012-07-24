@@ -101,7 +101,7 @@ function (observations, predGrid, candidates, action, nDiff,
                 lres = krige(as.formula(paste(vname,"~1")), predGrid, 
                        addPts, model = models[[i]], nmax = nmax, debug.level = 0)$var1.pred
                 if (is.factor(predGrid@data[,vname])) lres = factor(round(lres),
-                   level = levels(predGrid@data[,vname]))
+                   levels = levels(predGrid@data[,vname]))
                 addterms[,i] = lres
               }
             }

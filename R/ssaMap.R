@@ -122,7 +122,7 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
           if (is.na(overselect[1])) overselect = gerr
           for (i in 2:nvar) {
             if (is.factor(netPts@data[,i]) & !is.factor(overselect[i-1])) 
-                overselect[i-1] = factor(overselect[i-1],level = levels(netPts@data[,i]))
+                overselect[i-1] = factor(overselect[i-1],levels = levels(netPts@data[,i]))
             netPts@data[arraypos,i] = overselect[i-1]
           }
         } else if (covariates == "krige") {
@@ -131,7 +131,7 @@ ssaMap = function(candidates, predGrid, model, max_points_shift, maxShiftFactorX
             lres = krige(as.formula(paste(names(netPts)[i],"~1")), predGrid, 
                           netPts[arraypos,], model = models[[i]], nmax = nmax, 
                           debug.level = 0)$var1.pred
-            if (is.factor(netPts@data[,i])) lres = factor(round(lres),level = levels(netPts@data[,i]))
+            if (is.factor(netPts@data[,i])) lres = factor(round(lres),levels = levels(netPts@data[,i]))
             netPts@data[arraypos,i] = lres
           }
         } else stop(paste("Not able to use method", covariates, "for interpolating covariates"))

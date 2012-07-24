@@ -1,4 +1,5 @@
 options(error = recover)
+#test = TRUE
 test = FALSE
 set.seed(1)
 library(intamapInteractive)
@@ -71,7 +72,7 @@ print(MukvDel1)
 
 # Deletes optimally 20 stations from current network with method
 # "spcov" (spatial coverage)
-if (TRUE) {
+#if (TRUE) {
 optim1 = optimizeNetwork(observations,
          	                method = "spcov",
                           action = "del",
@@ -81,7 +82,6 @@ optim1 = optimizeNetwork(observations,
 # Computes the Mukv of the optimized network with spatial coverage
 MukvDel2 = calculateMukv(optim1, predGrid, model, formulaString = dayx~x+y)
 print(MukvDel2)
-}
 
 # Deletes optimally 20 stations from current network with method "ssa"
 # (spatial simulated annealing) and criterion "mukv"
