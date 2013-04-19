@@ -26,7 +26,8 @@ for (i in 1:nb) {
 }
 pBoundaries = SpatialPolygonsDataFrame(SpatialPolygons(Srl),
                                       data = data.frame(ID=c(1:nb)))
-observations$ID = overlay(observations,pBoundaries)
+
+observations$ID = over(observations, geometry(pBoundaries))
 blines = findBoundaryLines(pBoundaries,regCode = "ID")
 
 

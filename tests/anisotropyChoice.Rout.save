@@ -1,8 +1,7 @@
 
-R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
-Platform: x86_64-pc-mingw32/x64 (64-bit)
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -20,47 +19,26 @@ Type 'q()' to quit R.
 Loading required package: spcosa
 Loading required package: rJava
 Loading required package: ggplot2
-Use suppressPackageStartupMessages to eliminate package startup messages.
 Note: 'spcosa' requires Java (>= 6.0), which is available at www.java.com
 Loading required package: spatstat
 Loading required package: mgcv
-This is mgcv 1.7-18. For overview type 'help("mgcv-package")'.
+This is mgcv 1.7-22. For overview type 'help("mgcv-package")'.
 Loading required package: deldir
-deldir 0.0-19
-
-     PLEASE NOTE:  The components "delsgs" and "summary" of the 
-     object returned by deldir() are now DATA FRAMES rather than 
-     matrices (as they were prior to release 0.0-18). 
-     See help("deldir").
- 
-     PLEASE NOTE: The process for determining duplicated points
-     has changed from that used in version 0.0-9 (and previously).
-
-spatstat 1.28-1 
+deldir 0.0-22
+spatstat 1.31-1 
 Type 'help(spatstat)' for an overview of spatstat 
      'latest.news()' for news on latest version 
      'licence.polygons()' for licence information on polygon calculations
 Loading required package: intamap
 Loading required package: sp
 Loading required package: gstat
-Loading required package: spacetime
-Loading required package: zoo
-
-Attaching package: 'zoo'
-
-The following object(s) are masked from 'package:base':
-
-    as.Date, as.Date.numeric
-
-Loading required package: xts
 
 Attaching package: 'gstat'
 
-The following object(s) are masked from 'package:spatstat':
+The following object is masked from 'package:spatstat':
 
     idw
 
-Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
 Loading required package: MASS
@@ -69,7 +47,7 @@ Loading required package: lattice
 
 Attaching package: 'lattice'
 
-The following object(s) are masked from 'package:evd':
+The following object is masked from 'package:evd':
 
     qq
 
@@ -92,14 +70,14 @@ In createIntamapObject(observations = walker) :
  Max.   :1  
 > print(object$anisPar)
 $ratio
-[1] 1.196326
+[1] 1.104618
 
 $direction
-[1] 87.29871
+[1] -87.22301
 
 $clusters
-     [,1]     [,2]     [,3] [,4]  [,5]
-[1,]    1 1.196326 87.29871  470 68531
+     [,1]     [,2]      [,3] [,4]  [,5]
+[1,]    1 1.104618 -87.22301  470 68531
 
 > 
 > 
@@ -118,4 +96,4 @@ $clusters
 > 
 > proc.time()
    user  system elapsed 
-   4.91    0.26    5.19 
+   6.20    0.31    6.73 

@@ -1,8 +1,7 @@
 
-R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
-Platform: x86_64-pc-mingw32/x64 (64-bit)
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -27,43 +26,23 @@ Loading required package: ggplot2
 Note: 'spcosa' requires Java (>= 6.0), which is available at www.java.com
 Loading required package: spatstat
 Loading required package: mgcv
-This is mgcv 1.7-18. For overview type 'help("mgcv-package")'.
+This is mgcv 1.7-22. For overview type 'help("mgcv-package")'.
 Loading required package: deldir
-deldir 0.0-19
-
-     PLEASE NOTE:  The components "delsgs" and "summary" of the 
-     object returned by deldir() are now DATA FRAMES rather than 
-     matrices (as they were prior to release 0.0-18). 
-     See help("deldir").
- 
-     PLEASE NOTE: The process for determining duplicated points
-     has changed from that used in version 0.0-9 (and previously).
-
-spatstat 1.28-1 
+deldir 0.0-22
+spatstat 1.31-1 
 Type 'help(spatstat)' for an overview of spatstat 
      'latest.news()' for news on latest version 
      'licence.polygons()' for licence information on polygon calculations
 Loading required package: intamap
 Loading required package: sp
 Loading required package: gstat
-Loading required package: spacetime
-Loading required package: zoo
-
-Attaching package: 'zoo'
-
-The following object(s) are masked from 'package:base':
-
-    as.Date, as.Date.numeric
-
-Loading required package: xts
 
 Attaching package: 'gstat'
 
-The following object(s) are masked from 'package:spatstat':
+The following object is masked from 'package:spatstat':
 
     idw
 
-Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
 Loading required package: MASS
@@ -72,7 +51,7 @@ Loading required package: lattice
 
 Attaching package: 'lattice'
 
-The following object(s) are masked from 'package:evd':
+The following object is masked from 'package:evd':
 
     qq
 
@@ -104,7 +83,7 @@ The following object(s) are masked from 'package:evd':
 > initMukv <- calculateMukv(observations, predGrid, model, formulaString = dayx~x+y)
 [using universal kriging]
 > print(initMukv)
-[1] 116.2338
+[1] 116.2612
 > # Computes Kriging and plot result 
 > #GammaDoseMap = krige(dayx~x+y, observations, predGrid, model)
 > #GammaDoseMap = as.data.frame(GammaDoseMap)
@@ -158,7 +137,7 @@ The following object(s) are masked from 'package:evd':
 > MukvDel2 = calculateMukv(optim1, predGrid, model, formulaString = dayx~x+y)
 [using universal kriging]
 > print(MukvDel2)
-[1] 116.3482
+[1] 116.3774
 > 
 > # Deletes optimally 20 stations from current network with method "ssa"
 > # (spatial simulated annealing) and criterion "mukv"
@@ -208,10 +187,11 @@ The following object(s) are masked from 'package:evd':
 + print(MukvAdd2)
 + }
 [using ordinary kriging]
-[1] 115.4555
+[1] 115.505
 Warning messages:
-1: 2 location(s) outside the target universe (as defined by 'object') have been found
-These locations have been removed. 198 location(s) have been retained 
+1: '.local' is deprecated.
+Use 'over' instead.
+See help("Deprecated") and help("sp-deprecated"). 
 2: (Nearly) coinciding points have been removed.  
 > 
 > # Adds optimally 20 stations from current network with
@@ -234,18 +214,18 @@ These locations have been removed. 198 location(s) have been retained
 > 
 > # Compares computed designs based on the Mukv results (Small MUKV is better)
 > print(initMukv)
-[1] 116.2338
+[1] 116.2612
 > # Deleting 20 measurements
 > #print(MukvDel1) # Manual
 > print(MukvDel2) # Spatial Coverage
-[1] 116.3482
+[1] 116.3774
 > print(MukvDel3) # Spatial simulated annealing (MUKV in objective function)
 Error in print(MukvDel3) : object 'MukvDel3' not found
 recover called non-interactively; frames dumped, use debugger() to view
 > # Adding 20 measurements
 > #print(MukvAdd1) # Manual
 > print(MukvAdd2) # Spatial Coverage
-[1] 115.4555
+[1] 115.505
 > print(MukvAdd3) # Spatial simulated annealing (MUKV in objective function)
 Error in print(MukvAdd3) : object 'MukvAdd3' not found
 recover called non-interactively; frames dumped, use debugger() to view
@@ -256,4 +236,4 @@ recover called non-interactively; frames dumped, use debugger() to view
 > 
 > proc.time()
    user  system elapsed 
-  22.55    0.31   22.82 
+  20.99    0.40   21.40 
