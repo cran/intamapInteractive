@@ -8,8 +8,8 @@ and spatial simulated annealing (SSA, as described in \code{\link{ssaOptim}}) us
 }
 \usage{
 optimizeNetwork(observations, predGrid, candidates, method, action,
-nDiff, model, criterion = "MUKV", plotOptim = TRUE, nGridCells, nTry, nr_iterations = 10000,
-formulaString, ...)}
+                nDiff, model, criterion = "MUKV", plotOptim = TRUE, nGridCells, 
+                nTry, nr_iterations = 10000, formulaString, ...)}
 
 \arguments{
 \item{observations}{ object of class \code{\link[sp:Spatial-class]{Spatial}}*
@@ -17,9 +17,9 @@ formulaString, ...)}
 \item{predGrid}{ object of class \code{\link[sp:Spatial-class]{Spatial}}*
                used when \code{method = "ssa"}. \code{predGrid} should contain the coordinates 
                of prediction locations for optimization. Usually predGrid is a 
-               \code{\link[sp:SpatialPixels]{SpatialGrid}} / \code{\link[sp]{SpatialPixels}} 
-               or a \code{\link[sp:SpatialPixelsDataFrame]{SpatialGridDataFrame}} /
-               \code{\link[sp]{SpatialPixelsDataFrame}} when 
+               \code{\link[sp:SpatialGrid]{SpatialGrid}} / \code{\link[sp:SpatialGrid]{SpatialPixels}} 
+               or a \code{\link[sp:SpatialGrid]{SpatialGridDataFrame}} /
+               \code{\link[sp:SpatialGrid]{SpatialPixelsDataFrame}} when 
                independent covariate predictor variables are used }
 \item{candidates}{ when \code{method = "manual"} or \code{method = "ssa"}, candidates is the study area of class 
               \code{\link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}}; for other methods, 
@@ -133,10 +133,6 @@ Science, vol. 3., Elsevier, Amsterdam.
 
 \examples{
 \dontrun{
-library(gstat)
-library(intamapInteractive)
-options(error = recover)
-
 # load data:
 data(meuse)
 coordinates(meuse) = ~x+y
@@ -186,11 +182,20 @@ optimMAN = optimizeNetwork(meuse, meuse.grid, candidates, method = "manual",
 
 
 # comparison of results with ordinary kriging variogram, otherwise add formulaString
-calculateMukv(optimOK, predGrid, vfitOK) # ssa method, assuming ordinary kriging
-calculateMukv(optimUK, predGrid, vfitUK, zinc~x+y) # ssa method, using spatial location as covariates
-calculateMukv(optimRK, predGrid, vfitRK, zinc~dist+ffreq+soil) # ssa method, using other variables as covariates
-calculateMukv(optimSC, predGrid, vfitOK) # spcov method
-calculateMukv(optimMAN, predGrid, vfitOK, zinc~1) # 10 stations manually deleted
+# ssa method, assuming ordinary kriging
+calculateMukv(optimOK, predGrid, vfitOK) 
+
+# ssa method, using spatial location as covariates
+calculateMukv(optimUK, predGrid, vfitUK, zinc~x+y)
+ 
+# ssa method, using other variables as covariates
+calculateMukv(optimRK, predGrid, vfitRK, zinc~dist+ffreq+soil) 
+
+# spcov method
+calculateMukv(optimSC, predGrid, vfitOK) 
+
+# 10 stations manually deleted
+calculateMukv(optimMAN, predGrid, vfitOK, zinc~1) 
 
 }
 }

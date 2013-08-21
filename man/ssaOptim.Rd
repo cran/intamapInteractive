@@ -7,8 +7,8 @@ Candidate measurement locations are iteratively moved around and optimized by mi
 model for underlying spatial variation (\code{variogramModel}). }
 \usage{
 ssaOptim(observations, predGrid, candidates, action, nDiff, model,
-nr_iterations, plotOptim = TRUE, formulaString = NULL, coolingFactor = nr_iterations/10,
-covariates = "over", ...)
+         nr_iterations, plotOptim = TRUE, formulaString = NULL, 
+         coolingFactor = nr_iterations/10, covariates = "over", ...)
 
 }
 \arguments{
@@ -16,9 +16,9 @@ covariates = "over", ...)
 \item{predGrid}{ object of class \code{\link[sp:Spatial-class]{Spatial}}*
                used when \code{method = "ssa"}. \code{predGrid} should contain the coordinates 
                of prediction locations for optimization. Usually predGrid is a 
-               \code{\link[sp:SpatialPixels]{SpatialGrid}} / \code{\link[sp]{SpatialPixels}} 
-               or a \code{\link[sp:SpatialPixelsDataFrame]{SpatialGridDataFrame}} /  
-               \code{\link[sp]{SpatialPixelsDataFrame}} when 
+               \code{\link[sp:SpatialGrid]{SpatialGrid}} / \code{\link[sp:SpatialGrid]{SpatialPixels}} 
+               or a \code{\link[sp:SpatialGrid]{SpatialGridDataFrame}} /  
+               \code{\link[sp:SpatialGrid]{SpatialPixelsDataFrame}} when 
                independent covariate predictor variables are used }
 \item{candidates}{ candidates is the study area of class 
                \code{\link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}} }
@@ -81,7 +81,7 @@ Instead, these are estimated from the prediction locations.
 
 There are two possible methods to attain information on covariates at the 
 candidate locations, and the method can be set using the argument \code{covariates}: 
-\code{\link[sp]{over}} and \code{\link[gstat]{krige}}. Overlay finds the value of 
+\code{\link[sp]{over}} and \code{\link[gstat]{krige}}. \code{\link[sp]{over}} finds the value of 
 covariates at new locations by overlaying candidate locations on the prediction grid 
 and taking the value of the nearest neighbour. The second method uses kriging to 
 estimate covariate values at new locations from predGrid. The first method is 
@@ -109,10 +109,6 @@ the spatial pattern of networks for monitoring radioactive releases, Computers a
 \author{ O. Baume, S.J. Melles, J. Skoien }
 \examples{
 \dontrun{
-library(gstat)
-library(intamapInteractive)
-options(error = recover)
-
 # load data:
 data(meuse)
 coordinates(meuse) = ~x+y
@@ -136,15 +132,18 @@ candidates = SpatialPolygonsDataFrame(SpatialPolygons(list(Srl)),
 
 # add 20 more points assuming OK model (SSA method):
 optimOK <- ssaOptim(meuse, meuse.grid, candidates = candidates, covariates = "over",
-            nDiff = 20, action = "add", model = vfitOK, nr_iterations = 10000, formulaString = zinc~1, nmax = 40, countMax = 200)
+            nDiff = 20, action = "add", model = vfitOK, nr_iterations = 10000, 
+            formulaString = zinc~1, nmax = 40, countMax = 200)
 
 # add 20 more points assuming UK model (SSA method):
 optimUK <- ssaOptim(meuse, meuse.grid, candidates = candidates, covariates = "over",
-            nDiff = 20, action = "add", model = vfitUK, nr_iterations = 10000, formulaString = zinc~x+y, nmax = 40, countMax = 200)
+            nDiff = 20, action = "add", model = vfitUK, nr_iterations = 10000, 
+            formulaString = zinc~x+y, nmax = 40, countMax = 200)
 
 # add 20 more points with auxiliary variables (SSA method):
 optimRK <- ssaOptim(meuse, meuse.grid, candidates = candidates, covariates = "over",
-            nDiff = 20, action = "add", model = vfitRK, nr_iterations = 10000, formulaString = zinc~dist+ffreq+soil, nmax = 40, countMax = 200)
+            nDiff = 20, action = "add", model = vfitRK, nr_iterations = 10000, 
+            formulaString = zinc~dist+ffreq+soil, nmax = 40, countMax = 200)
    }
    }
 

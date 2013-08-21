@@ -95,16 +95,14 @@ For \code{removeRegionalBias}; a \code{\link[base]{data.frame}} with observation
 
 \url{http://www.intamap.org/}
 
-Skoien, J. O., O. P. Baume, E. J. Pebesma, and G. B. M. Heuvelink. 2009. 
-Identifying and removing heterogeneities between monitoring networks. 
-Environmetrics, Accepted.
+Skoien, J. O., O. P. Baume, E. J. Pebesma, and G. B. M. Heuvelink. 2010. 
+Identifying and removing heterogeneities between monitoring networks.
+Environmetrics 21(1), 66-84.
 
 }
 \author{ Jon Olav Skoien }
 \examples{
-
 library(intamapInteractive)
-
 data(meuse)
 observations = data.frame(x = meuse$x,y = meuse$y,value = log(meuse$zinc))
 coordinates(observations) = ~x+y
@@ -129,7 +127,6 @@ for (i in 1:nb) {
 }
 pBoundaries = SpatialPolygonsDataFrame(SpatialPolygons(Srl),
                                       data = data.frame(ID=c(1:nb)))
-#observations$ID = overlay(observations, pBoundaries)
 observations$ID = over(observations, geometry(pBoundaries))
 blines = findBoundaryLines(pBoundaries, regCode = "ID")
 rb = findRegionalBias(observations, blines, value~1, regCode = "ID")

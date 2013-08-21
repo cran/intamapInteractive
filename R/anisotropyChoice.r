@@ -121,7 +121,7 @@ anisotropyChoice<-function(object){
 		temp<-xyz_new[which(i==ind),]
 				
 
-		tempPar<-intamap:::estimateAnisotropySc(temp[,1],temp[,2],temp[,3])
+		tempPar<- intamap:::estimateAnisotropySc(temp[,1],temp[,2],temp[,3])
 		
 		
 		

@@ -88,7 +88,7 @@ Proceedings (ed. G. Dubois).
 \author{A. Chorti, Spiliopoulos Giannis, Hristopulos Dionisis}
 
 \examples{
-library(intamapInteractive)
+library(gstat)
 
 data(walker)
 # coordinates(walker)=~X+Y

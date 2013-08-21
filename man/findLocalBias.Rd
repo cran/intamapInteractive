@@ -10,7 +10,8 @@ biases are estimated, and can be removed.
 \usage{
 findLocalBias(object, gid = "group",
               formulaString = value ~ 1, regCode="regCode",...)
-removeLocalBias(object, localBias, gid = "group", formulaString = value ~ 1, regCode = "regCode")
+removeLocalBias(object, localBias, gid = "group", formulaString = value ~ 1, 
+                regCode = "regCode")
 }
 \arguments{
 \item{object}{ data frame with observations}
@@ -46,7 +47,8 @@ can be assumed to be a dependency beteween the process and the networks.
 }
 
 \value{ 
-From \code{findLocalBias}: A list consisting of one element for each regional network, or an element \code{single}
+From \code{findLocalBias}: A list consisting of one element for each regional 
+network, or an element \code{single}
 if only one regional network is apparent. Each of these elements is again a list 
 consisting of several other elements, where \code{bias} is the interesting one.
 The remaining elements are only necessary for debugging purposes. The elements
@@ -62,9 +64,9 @@ with the biases subtracted.
 
 \url{http://www.intamap.org/}
 
-Skoien, J. O., O. P. Baume, E. J. Pebesma, and G. B. M. Heuvelink. 2009. 
+Skoien, J. O., O. P. Baume, E. J. Pebesma, and G. B. M. Heuvelink. 2010. 
 Identifying and removing heterogeneities between monitoring networks. 
-Environmetrics, Accepted.
+Environmetrics 21(1), 66-84.
 
 
 }
@@ -72,7 +74,6 @@ Environmetrics, Accepted.
 \examples{
 
 # Assuming that the soil type is the source of biases
-library(intamapInteractive)
 data(meuse)
 coordinates(meuse) = ~x+y
 

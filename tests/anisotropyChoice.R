@@ -1,5 +1,5 @@
 library(intamapInteractive)
-
+library(gstat)
 data(walker)
 object=createIntamapObject(observations=walker)
 object=anisotropyChoice(object)

@@ -1,8 +1,10 @@
 options(error = recover)
 #test = TRUE
 test = FALSE
+mantest = FALSE
 set.seed(1)
 library(intamapInteractive)
+library(gstat)
 #require(maptools)
 # for SIC2004 dataset
 data(sic2004)
@@ -59,7 +61,7 @@ print(initMukv)
 
 # Deletes manually 20 stations from current network with method
 # "manual" 
-if (test) {
+if (mantest) {
 optimDel1=optimizeNetwork( observations,
                            method = "manual",
                            action = "del",
@@ -106,7 +108,7 @@ print(MukvDel3)
 # Adds manually 20 stations from current network with method
 # "manual" 
 
-if (test) {
+if (mantest) {
 optimAdd1=optimizeNetwork( observations,
                            method = "manual",
                            action = "add",
@@ -154,11 +156,11 @@ print(initMukv)
 # Deleting 20 measurements
 #print(MukvDel1) # Manual
 print(MukvDel2) # Spatial Coverage
-print(MukvDel3) # Spatial simulated annealing (MUKV in objective function)
+if (test) print(MukvDel3) # Spatial simulated annealing (MUKV in objective function)
 # Adding 20 measurements
 #print(MukvAdd1) # Manual
 print(MukvAdd2) # Spatial Coverage
-print(MukvAdd3) # Spatial simulated annealing (MUKV in objective function)
+if (test) print(MukvAdd3) # Spatial simulated annealing (MUKV in objective function)
 
 
 

@@ -8,11 +8,11 @@ Computes mean universal kriging variance (MUKV) for given geostatistical paramet
 calculateMukv(observations, predGrid, model, formulaString, ...)
 }
 \arguments{
-\item{observations}{ \code{\link[sp]{SpatialPoints}} or  \code{\link[sp]{SpatialPointsDataFrame}} 
+\item{observations}{ \code{\link[sp]{SpatialPoints}} or  \code{\link[sp:SpatialPoints]{SpatialPointsDataFrame}} 
      with observation locations and possible covariates }
 \item{predGrid}{ \code{\link[sp:Spatial-class]{Spatial}} object with coordinates of 
-     prediction locations (usually \code{\link[sp:SpatialPixels]{SpatialGrid}} 
-       or \code{\link[sp:SpatialPixelsDataFrame]{SpatialGridDataFrame}} when 
+     prediction locations (usually \code{\link[sp]{SpatialGrid}} 
+       or \code{\link[sp:SpatialGrid]{SpatialGridDataFrame}} when 
        independent covariate predictor variables are used) }
 \item{model}{ Variogram model:object of class \code{variogramModel}, of the form
                 created by \code{\link[gstat:vgm]{vgm}}}
@@ -42,10 +42,6 @@ MUKV value
 \author{ S.J. Melles, O. Baume, J. Skoien }
 \examples{
 \dontrun{
-
-library(gstat)
-library(intamapInteractive)
-
 # load data:
 data(meuse)
 coordinates(meuse) = ~x+y

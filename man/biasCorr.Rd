@@ -67,9 +67,9 @@ Data frame with observations, with the identified biases removed.
 
 \url{http://www.intamap.org/}
 
-Skoien, J. O., O. P. Baume, E. J. Pebesma, and G. B. M. Heuvelink. 2009. 
+Skoien, J. O., O. P. Baume, E. J. Pebesma, and G. B. M. Heuvelink. 2010. 
 Identifying and removing heterogeneities between monitoring networks. 
-Environmetrics, Accepted.
+Environmetrics 21(1), 66-84.
 }
 \author{ Jon Olav Skoien}
 
@@ -78,8 +78,6 @@ Environmetrics, Accepted.
 }
 \examples{
 \dontrun{
-library(intamapInteractive)
-
 data(meuse)
 data(meuse.grid)
 observations = data.frame(x = meuse$x,y = meuse$y,value = log(meuse$zinc))
@@ -108,7 +106,6 @@ for (i in 1:nb) {
 }
 pBoundaries = SpatialPolygonsDataFrame(SpatialPolygons(Srl),
                                       data = data.frame(ID=c(1:nb)))
-#observations$ID = overlay(observations, pBoundaries)
 observations$ID = over(observations, geometry(pBoundaries))
 blines = findBoundaryLines(pBoundaries,regCode = "ID")
 

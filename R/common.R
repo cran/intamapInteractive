@@ -83,5 +83,5 @@ dSolve = function(diffs) {
 #}
 
 commonArea = function(...) {
- intamap:::commonArea(...)
+  intamap:::commonArea(...)
 }

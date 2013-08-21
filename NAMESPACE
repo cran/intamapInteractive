@@ -1,5 +1,8 @@
-import(intamap)
+importFrom("spatstat", nndist, nndist.default)
 import(spcosa)
+import(gstat)
+import(automap)
+import(intamap)
 
 export(
 	anisotropyChoice,
