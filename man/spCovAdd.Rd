@@ -32,9 +32,7 @@ Function stratify adds new strata to the domain study.
 }
 
 \references{
-[1] \url{http://www.intamap.org/}
-
-[2] D. J. Brus, J. de Gruijter, J. van Groenigen (2006). Designing spatial coverage samples using
+D. J. Brus, J. de Gruijter, J. van Groenigen (2006). Designing spatial coverage samples using
 the k-means clustering algorithm. In A. McBratney M. Voltz and P. Lagacherie,
 editor, Digital Soil Mapping: An Introductory Perspective, Developments in Soil
 Science, vol. 3., Elsevier, Amsterdam.

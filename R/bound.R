@@ -15,8 +15,8 @@ findBoundaryLines = function(polygons, projOrig, projNew,regCode = "regCode") {
 #    writePolyShape(polygons,"regionLim")
   if (!missing(projOrig)) {
     proj4string(polygons) = CRS(projOrig)
-    if (!missing(projNew) & projOrig != projNew & require(rgdal)) {
-      polygons = rgdal::spTransform(polygons, CRS(projNew))
+    if (!missing(projNew) & projOrig != projNew) {
+      polygons = spTransform(polygons, CRS(projNew))
     }
   }
   boundaryLines = findBoundaries(polygons,regCode)
@@ -65,6 +65,7 @@ for (i in 1:(nRegCode-1)) {
 #    cat(paste("Checking",i,j,rci,rcj,"\n"))
     if ( commonArea(c1,c2)[[1]] > 0.001) {
       c21 = rbind(c1k,c2k)
+      c21 = signif(c21, 14)
       lbound = c21[duplicated(c21),]
       ldim = dim(lbound)[1]
       if (ldim > 0) {

@@ -11,7 +11,6 @@
 \value{ 
 A \code{\link[base:data.frame]{data.frame}} with the biases for each country with uncertainty.
 }
-\references{ \url{http://www.intamap.org/}}
 \author{ Olivier Baume }
 \seealso{\code{\link{findRegionalBias}}}
 \keyword{spatial}

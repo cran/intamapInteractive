@@ -30,8 +30,5 @@ swapping algorithm to converge more rapidly to the best solution.
 \code{\link[base]{data.frame}} of optimized locations
 }
 
-\references{
-\url{http://www.intamap.org/}
-}
 \author{ Olivier Baume }
 \keyword{spatial}

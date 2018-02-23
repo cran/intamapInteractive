@@ -106,20 +106,18 @@ of optimized locations (including observation locations when \code{action = "add
 
 \references{
 
-[1] \url{http://www.intamap.org/}
-
-[2] O. P. Baume, A. Gebhardt, C. Gebhardt, G. B. M. Heuvelink, J. Pilz (2011). Network 
+O. P. Baume, A. Gebhardt, C. Gebhardt, G. B. M. Heuvelink, J. Pilz (2011). Network 
 optimization algorithms and scenarios in the context of automatic mapping, Computers and Geosciences, 
 37: 289-294 (2011). 
 
-[3] S. J. Melles, G. B. M. Heuvelink, C. J. W. Twenhofel, U. Stohlker (2011).	Optimizing 
+S. J. Melles, G. B. M. Heuvelink, C. J. W. Twenhofel, U. Stohlker (2011).	Optimizing 
 the spatial pattern of networks for monitoring radioactive releases, Computers and Geosciences, 
 37: 280-288 (2011). 
 
-[4] D. J. Brus, G. B. M. Heuvelink (2007). Optimization of sample patterns for universal 
+D. J. Brus, G. B. M. Heuvelink (2007). Optimization of sample patterns for universal 
 kriging of environmental variables, Geoderma, 138: 86-95 (2007).
 
-[5] D. J. Brus, J. de Gruijter, J. van Groenigen (2006). Designing spatial coverage samples using
+D. J. Brus, J. de Gruijter, J. van Groenigen (2006). Designing spatial coverage samples using
 the k-means clustering algorithm. In A. McBratney M. Voltz and P. Lagacherie,
 editor, Digital Soil Mapping: An Introductory Perspective, Developments in Soil
 Science, vol. 3., Elsevier, Amsterdam.

@@ -96,12 +96,10 @@ SpatialPointsDataFrame with optimized locations
 
 \references{
 
-[1] \url{http://www.intamap.org/}
-
-[2] D. J. Brus, G. B. M. Heuvelink (2007). Optimization of sample patterns for universal 
+D. J. Brus, G. B. M. Heuvelink (2007). Optimization of sample patterns for universal 
 kriging of environmental variables, Geoderma, 138: 86-95 (2007). 
 
-[3] S. J. Melles, G. B. M. Heuvelink, C. J. W. Twenhofel, U. Stohlker (2011).	Optimizing 
+S. J. Melles, G. B. M. Heuvelink, C. J. W. Twenhofel, U. Stohlker (2011).	Optimizing 
 the spatial pattern of networks for monitoring radioactive releases, Computers and Geosciences, 
 37: 280-288 (2011).
 

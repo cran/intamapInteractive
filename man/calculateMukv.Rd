@@ -5,7 +5,7 @@
 Computes mean universal kriging variance (MUKV) for given geostatistical parameters
 }
 \usage{
-calculateMukv(observations, predGrid, model, formulaString, ...)
+calculateMukv(observations, predGrid, model, formulaString, fun, ...)
 }
 \arguments{
 \item{observations}{ \code{\link[sp]{SpatialPoints}} or  \code{\link[sp:SpatialPoints]{SpatialPointsDataFrame}} 
@@ -23,6 +23,8 @@ calculateMukv(observations, predGrid, model, formulaString, ...)
       \code{x} and \code{y}, use the formula \code{z~x+y}. The formulaString defaults
       to \code{"value~1"} if \code{value} is a part of the data set. 
       If not, the first column of the data set is used.}
+\item{fun}{alternative penalty function, needs to be a function which can take the
+      same arguments as \code{calculateMukv}}
 \item{...}{ other arguments to be passed on at lower level functions }
 }
 
@@ -36,9 +38,6 @@ the function takes a universal kriging model into account.
 MUKV value
 }
 
-\references{
-\url{http://www.intamap.org/}
-}
 \author{ S.J. Melles, O. Baume, J. Skoien }
 \examples{
 \dontrun{

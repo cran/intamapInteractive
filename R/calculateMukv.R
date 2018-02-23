@@ -1,7 +1,10 @@
 # missing values are not allowed.
 `calculateMukv` <-
-function (observations, predGrid, model, formulaString, ...)
+function (observations, predGrid, model, formulaString, fun, ...)
 {
+    if (!missing(fun) && is.function(fun)) {
+      return(do.call(fun, list(observations, predGrid, model, formulaString, ...)))
+    } 
     prG = predGrid
     obs = observations
     if (missing(formulaString) || is.null(formulaString)) {

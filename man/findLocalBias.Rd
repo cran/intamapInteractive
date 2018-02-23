@@ -62,8 +62,6 @@ with the biases subtracted.
 
 \references{ 
 
-\url{http://www.intamap.org/}
-
 Skoien, J. O., O. P. Baume, E. J. Pebesma, and G. B. M. Heuvelink. 2010. 
 Identifying and removing heterogeneities between monitoring networks. 
 Environmetrics 21(1), 66-84.
