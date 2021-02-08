@@ -1,5 +1,4 @@
-importFrom("spatstat", nndist, nndist.default)
-import(spcosa)
+importFrom("spatstat.geom", nndist, nndist.default)
 import(gstat)
 import(automap)
 import(intamap)

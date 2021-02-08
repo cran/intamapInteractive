@@ -4,15 +4,15 @@ function (observations, predGrid, candidates, method, action,
     nTry, nr_iterations = 10000, formulaString, ...)
 {
     if (length(method) == 0)
-        stop(cat("No 'method' informed..."))
+        stop("'method' is missing")
     if (length(method) > 0) {
         if (method != "spcov" & method != "ssa" & method != "manual")
-            stop(cat("No 'method' required ..."))
+            stop(paste("The method  ", method, "  is not implemented"))
         if (method == "ssa" & length(criterion) > 0) {
             if (criterion != "MUKV")
-                stop(cat("Criterion ", criterion, " is not implemented."))
+                stop("Criterion ", criterion, " is not implemented.")
             if (criterion == "MUKV" & length(predGrid) == 0)
-                stop(cat("No prediction locations to compute MUKV."))
+                stop("Missing prediction locations to compute MUKV.")
         }
     }
     if (length(action) == 0)
@@ -40,8 +40,12 @@ function (observations, predGrid, candidates, method, action,
     }
     if (method == "spcov") {
         if (action == "add") {
-            return(spCovAdd(observations, candidates, nDiff,
-                nGridCells, plotOptim, nTry))
+            if (requireNamespace("spcosa", quietly = TRUE)) {
+              return(spCovAdd(observations, candidates, nDiff,
+                  nGridCells, plotOptim, nTry))
+            } else {
+              stop("The package spcosa must be installed for adding points with the spcov method")
+            }
         }
         if (action == "del") {
             return(spCovDel(observations, candidates, nDiff,
