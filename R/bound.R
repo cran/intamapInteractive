@@ -1,26 +1,19 @@
 
 ###################################
 #
-# Bound.R included different functions for finding boundaries between polygons (countries)
+# Bound.R includes different functions for finding boundaries between polygons (countries)
 #
 ###################################
 
 findBoundaryLines = function(polygons, projOrig, projNew,regCode = "regCode") {
   
-#  FUN = try(match.fun(cleanPolygons),silent=TRUE)
-#  if (!inherits(FUN,"try-error")) {
-#    print("found function cleanPolygons")
-#    polygons = FUN(polygons)
-#  }
-#    writePolyShape(polygons,"regionLim")
   if (!missing(projOrig)) {
     proj4string(polygons) = CRS(projOrig)
     if (!missing(projNew) & projOrig != projNew) {
-      polygons = spTransform(polygons, CRS(projNew))
+      polygons = as(st_transform(polygons, crs = st_crs(projNew)), "Spatial")
     }
   }
   boundaryLines = findBoundaries(polygons,regCode)
-#    save(regionalBoundaries,file="regionalBoundaries.r")
 
   if (!extends(class(boundaryLines),"Spatial")) coordinates(boundaryLines) = ~x+y
   if (!missing(projNew) & (is.na(is.projected(boundaryLines)) | 
@@ -62,7 +55,6 @@ for (i in 1:(nRegCode-1)) {
     rcj = as.character(uRegCode[j])
     c2k = cList[[j]]
     c2 = polyList[[j]]
-#    cat(paste("Checking",i,j,rci,rcj,"\n"))
     if ( commonArea(c1,c2)[[1]] > 0.001) {
       c21 = rbind(c1k,c2k)
       c21 = signif(c21, 14)

@@ -1,7 +1,7 @@
 `optimizeNetwork` <-
 function (observations, predGrid, candidates, method, action,
     nDiff, model, criterion = "MUKV", plotOptim = TRUE, nGridCells,
-    nTry, nr_iterations = 10000, formulaString, ...)
+    nTry, nr_iterations = 10000, formulaString, fun, ...)
 {
     if (length(method) == 0)
         stop("'method' is missing")
@@ -16,36 +16,32 @@ function (observations, predGrid, candidates, method, action,
         }
     }
     if (length(action) == 0)
-        stop(cat("No 'action' defined ... choose 'add' or 'del'."))
+        stop("No 'action' defined ... choose 'add' or 'del'.")
     if (length(action) > 0) {
         if (action != "add" & action != "del")
-            stop(cat("No relevant 'action' defined ... choose 'add' or 'del'."))
+            stop("No relevant 'action' defined ... choose 'add' or 'del'.")
         if (action == "add") {
-            if (length(candidates) == 0 | class(candidates) !=
-                "SpatialPolygonsDataFrame")
-                stop(cat("Candidate locations for additionnal measurements should be a shapefile."))
+            if (length(candidates) == 0 | !inherits(candidates, "SpatialPolygons"))
+                stop("Candidate locations for additionnal measurements should be SpatialPolygons.")
         }
     }
     if (length(nDiff) == 0 | nDiff <= 0)
-        stop(cat("nDiff is not well defined", nDiff))
+        stop(paste("nDiff is not well defined", nDiff))
     if (method == "ssa") {
         if (missing(formulaString) || is.null(formulaString)) {
             observations = SpatialPointsDataFrame(observations,
                 data = data.frame(dum = rep(1, dim(coordinates(observations))[1])))
             formulaString = dum ~ 1
         }
+      
         return(ssaOptim(observations, predGrid, candidates, action,
-            nDiff, model, nr_iterations, plotOptim, formulaString,
+            nDiff, model, nr_iterations, plotOptim, formulaString, fun = fun,
             ...))
     }
     if (method == "spcov") {
         if (action == "add") {
-            if (requireNamespace("spcosa", quietly = TRUE)) {
               return(spCovAdd(observations, candidates, nDiff,
                   nGridCells, plotOptim, nTry))
-            } else {
-              stop("The package spcosa must be installed for adding points with the spcov method")
-            }
         }
         if (action == "del") {
             return(spCovDel(observations, candidates, nDiff,

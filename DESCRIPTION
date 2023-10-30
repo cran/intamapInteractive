@@ -1,15 +1,27 @@
 Package: intamapInteractive
-Version: 1.1-13
-Date: 2021-02-08
+Version: 1.2-6
+Date: 2023-10-30
 Title: Interactive Add-on Functionality for 'intamap'
-Author: Edzer Pebesma <edzer.pebesma@uni-muenster.de>, Jon Skoien <jon.skoien@gmail.com> with contributions from Olivier Baume, A.Chorti, D.T. Hristopulos, S.J. Melles, G. Spiliopoulos
+Authors@R: c(person("Edzer", "Pebesma", role = c("aut"), email = "edzer.pebesma@uni-muenster.de"),
+           person("Jon", "Skoien", role = c("aut", "cre"), email = "jon.skoien@gmail.com"),
+           person("Olivier", "Baume", role = c("ctb")),
+           person("A", "Chorti", role = "ctb"), 
+           person("Dionisis", "Hristopulos", role = "ctb"), 
+           person("Stepahnie", "Melles", role = "ctb"),
+           person("Giannis", "Spiliopoulos", role = "ctb"))
 Maintainer: Jon Skoien <jon.skoien@gmail.com>
 Depends: intamap
-Imports: spatstat.geom, automap, gstat, rgdal, methods, sp
-Suggests: spcosa, DBI, RSQLite
-Description: Includes additional functionality for spatial interpolation in the intamap package, such as bias correction and network optimization.
+Imports: spatstat.geom, automap, gstat, methods, sp, spcosa, sf
+Description: The methods in this package adds to the functionality of  the 'intamap' package, such as bias correction and network optimization. Pebesma et al (2010) gives an overview of the methods behind and possible usage <doi:10.1016/j.cageo.2010.03.019>.
 License: GPL (>= 2)
 NeedsCompilation: no
-Packaged: 2021-02-08 10:10:56 UTC; user
+Packaged: 2023-10-30 10:34:28 UTC; skoiejo
+Author: Edzer Pebesma [aut],
+  Jon Skoien [aut, cre],
+  Olivier Baume [ctb],
+  A Chorti [ctb],
+  Dionisis Hristopulos [ctb],
+  Stepahnie Melles [ctb],
+  Giannis Spiliopoulos [ctb]
 Repository: CRAN
-Date/Publication: 2021-02-08 11:50:02 UTC
+Date/Publication: 2023-10-30 13:30:05 UTC

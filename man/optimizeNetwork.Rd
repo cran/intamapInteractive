@@ -9,7 +9,7 @@ and spatial simulated annealing (SSA, as described in \code{\link{ssaOptim}}) us
 \usage{
 optimizeNetwork(observations, predGrid, candidates, method, action,
                 nDiff, model, criterion = "MUKV", plotOptim = TRUE, nGridCells, 
-                nTry, nr_iterations = 10000, formulaString, ...)}
+                nTry, nr_iterations = 10000, formulaString, fun, ...)}
 
 \arguments{
 \item{observations}{ object of class \code{\link[sp:Spatial-class]{Spatial}}*
@@ -52,6 +52,8 @@ optimizeNetwork(observations, predGrid, candidates, method, action,
             \code{x} and \code{y}, use the formula \code{z~x+y}. The formulaString defaults
             to \code{"value~1"} if \code{value} is a part of the data set. 
             If not, the first column of the data set in \code{observations} is used. }
+\item{fun}{Alternative objective function for optimization, the input and output should match
+            the ones of  (\code{\link{calculateMukv}} (except for \code{fun})}
 \item{...}{ other arguments to be passed on to lower level functions }
 }
 
@@ -130,8 +132,9 @@ Science, vol. 3., Elsevier, Amsterdam.
 \code{\link[spcosa:stratify-methods]{stratify}} }
 
 \examples{
-\dontrun{
+\donttest{
 # load data:
+library(gstat)
 data(meuse)
 coordinates(meuse) = ~x+y
 data(meuse.grid)
@@ -151,6 +154,7 @@ boun = SpatialPoints(data.frame(x=c(bb[1,1],bb[1,2],bb[1,2],bb[1,1],bb[1,1]),
 Srl = Polygons(list(Polygon(boun)),ID = as.character(1))
 candidates = SpatialPolygonsDataFrame(SpatialPolygons(list(Srl)),
                                       data = data.frame(ID=1))
+
 
 # add 20 more points assuming OK model (SSA method):
  optimOK <- optimizeNetwork(meuse, meuse.grid, candidates = candidates,
@@ -175,7 +179,7 @@ optimSC = optimizeNetwork(meuse, meuse.grid, candidates, method = "spcov",
             nGridCells = 10000,nTry = 100 )
 
 # delete optimally 10 stations from current network with method "manual"
-optimMAN = optimizeNetwork(meuse, meuse.grid, candidates, method = "manual",
+if (interactive()) optimMAN = optimizeNetwork(meuse, meuse.grid, candidates, method = "manual",
             action = "del", nDiff = 10, model = model, criterion = "MUKV", plotOptim = TRUE )
 
 
@@ -193,7 +197,7 @@ calculateMukv(optimRK, predGrid, vfitRK, zinc~dist+ffreq+soil)
 calculateMukv(optimSC, predGrid, vfitOK) 
 
 # 10 stations manually deleted
-calculateMukv(optimMAN, predGrid, vfitOK, zinc~1) 
+if (interactive()) calculateMukv(optimMAN, predGrid, vfitOK, zinc~1) 
 
 }
 }

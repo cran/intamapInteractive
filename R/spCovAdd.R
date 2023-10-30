@@ -4,13 +4,13 @@ spCovAdd = function(observations, candidates, nDiff, nGridCells, plotOptim = TRU
   net = SpatialPoints(observations)
   nExist=length(coordinates(net)[,1])
   nStrata = nExist+nDiff
-  newStrat = spcosa::stratify( candidates, nStrata, net, nGridCells, 
+  newStrat = stratify( candidates, nStrata, net, nGridCells, 
              maxIterations = 1000, nTry = nTry, equalArea = F)
 
   newPts = spsample(newStrat)
   spData = as(newPts, "data.frame")
   while(dim(spData)[1] < nExist+nDiff){
-    newStrat = spcosa::stratify( candidates, nStrata, net, nGridCells,
+    if (requireNamespace("spcosa")) newStrat = spcosa::stratify( candidates, nStrata, net, nGridCells,
                maxIterations = 1000, nTry = nTry, equalArea = F)
     newPts = spsample(newStrat)
     spData = as(newPts, "data.frame")
