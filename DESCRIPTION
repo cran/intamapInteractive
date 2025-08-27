@@ -1,6 +1,5 @@
 Package: intamapInteractive
-Version: 1.2-6
-Date: 2023-10-30
+Version: 1.2-7
 Title: Interactive Add-on Functionality for 'intamap'
 Authors@R: c(person("Edzer", "Pebesma", role = c("aut"), email = "edzer.pebesma@uni-muenster.de"),
            person("Jon", "Skoien", role = c("aut", "cre"), email = "jon.skoien@gmail.com"),
@@ -15,7 +14,7 @@ Imports: spatstat.geom, automap, gstat, methods, sp, spcosa, sf
 Description: The methods in this package adds to the functionality of  the 'intamap' package, such as bias correction and network optimization. Pebesma et al (2010) gives an overview of the methods behind and possible usage <doi:10.1016/j.cageo.2010.03.019>.
 License: GPL (>= 2)
 NeedsCompilation: no
-Packaged: 2023-10-30 10:34:28 UTC; skoiejo
+Packaged: 2025-08-27 07:45:13 UTC; skoiejo
 Author: Edzer Pebesma [aut],
   Jon Skoien [aut, cre],
   Olivier Baume [ctb],
@@ -24,4 +23,4 @@ Author: Edzer Pebesma [aut],
   Stepahnie Melles [ctb],
   Giannis Spiliopoulos [ctb]
 Repository: CRAN
-Date/Publication: 2023-10-30 13:30:05 UTC
+Date/Publication: 2025-08-27 08:10:13 UTC
